@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace S10257799G_PRG2Assignment
 {
-    class Waffle:IceCream
+    internal class Waffle : IceCream
     {
         public string WaffleFlavour { get; set; }
 
         string[] flavourIndex = ["Red Velvet", "Charcoal", "Pandan"];
-        public Waffle(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string _waffleflavour) : base(option, scoops, flavours, toppings) 
-        { 
+        public Waffle(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string _waffleflavour) : base(option, scoops, flavours, toppings)
+        {
             WaffleFlavour = _waffleflavour;
         }
 

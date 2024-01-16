@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace S10257799G_PRG2Assignment
 {
-    class Cone:IceCream
+    internal class Cone : IceCream
     {
         //Set the value of variables
         public bool Dipped { get; set; }
 
         public Cone() { }
         //Object constructor
-        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool _dipped) : base(option, scoops, flavours, toppings) 
-        { 
+        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool _dipped) : base(option, scoops, flavours, toppings)
+        {
             Dipped = _dipped;
         }
 

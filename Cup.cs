@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace S10257799G_PRG2Assignment
 {
-    class Cup : IceCream
+    internal class Cup : IceCream
     {
         //Set the value of variables
         public Cup() { }
         //Object constructor
-        public Cup(string option, int scoops, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings) {}
+        public Cup(string option, int scoops, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings) { }
 
         public override double CalculatePrice()
         {
@@ -32,7 +32,7 @@ namespace S10257799G_PRG2Assignment
                     break;
             }
 
-            foreach(Flavour item in Flavours)
+            foreach (Flavour item in Flavours)
             {
                 if (item.Premium == true)
                 {
@@ -43,8 +43,8 @@ namespace S10257799G_PRG2Assignment
             return price;
         }
 
-        public override string ToString() 
-        { 
+        public override string ToString()
+        {
             return base.ToString();
         }
     }

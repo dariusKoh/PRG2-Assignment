@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace S10257799G_PRG2Assignment
 {
-    class Flavour
+    internal class Flavour
     {
         //Retrieve and set value of variables
         public string Type { get; set; }
         public bool Premium { get; set; }
         public int Quantity { get; set; }
 
-        public Flavour() {}
+        public Flavour() { }
         //Object constructor
         public Flavour(string _type, bool _premium, int _quantity)
         {
