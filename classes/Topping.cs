@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 */
 
 
-namespace S10257799G_PRG2Assignment
+namespace PRG2_Assignment.classes
 {
     internal class Topping
     {

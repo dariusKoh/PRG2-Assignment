@@ -1,0 +1,15 @@
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\PRG2-Assignment.exe
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\PRG2-Assignment.deps.json
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\PRG2-Assignment.runtimeconfig.json
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\PRG2-Assignment.dll
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\PRG2-Assignment.pdb
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.GeneratedMSBuildEditorConfig.editorconfig
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.AssemblyInfoInputs.cache
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.AssemblyInfo.cs
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.csproj.CoreCompileInputs.cache
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.sourcelink.json
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.dll
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\refint\PRG2-Assignment.dll
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.pdb
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.genruntimeconfig.cache
+C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\ref\PRG2-Assignment.dll

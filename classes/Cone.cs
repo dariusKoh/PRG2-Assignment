@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PRG2_Assignment.classes;
 
 namespace S10257799G_PRG2Assignment
 {
