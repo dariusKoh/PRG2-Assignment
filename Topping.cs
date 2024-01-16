@@ -15,15 +15,15 @@ using System.Threading.Tasks;
 
 namespace S10257799G_PRG2Assignment
 {
-    class Topping
+    internal class Topping
     {
         //Set value of variable
         public string Type { get; set; }
 
         public Topping() { }
         //Object constructor
-        public Topping(string _type) 
-        { 
+        public Topping(string _type)
+        {
             Type = _type;
         }
 

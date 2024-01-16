@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace S10257799G_PRG2Assignment
 {
-    abstract class IceCream
+    internal abstract class IceCream
     {
         //Set values of variables
         public string Option { get; set; }
@@ -24,7 +24,7 @@ namespace S10257799G_PRG2Assignment
         public List<Topping> Toppings { get; set; }
 
         public IceCream() { }
-        
+
         public IceCream(string _option, int _scoops, List<Flavour> _flavours, List<Topping> _toppings)
         {
             Option = _option;
@@ -39,12 +39,12 @@ namespace S10257799G_PRG2Assignment
             string allFlavours = "";
             string allToppings = "";
             //Iterate through every item in the lists and add them for output in ToString()
-            foreach(Flavour item in Flavours)
+            foreach (Flavour item in Flavours)
             {
                 allFlavours += " " + item.ToString();
             }
 
-            foreach(Topping item in Toppings)
+            foreach (Topping item in Toppings)
             {
                 allToppings += " " + item.ToString();
             }
