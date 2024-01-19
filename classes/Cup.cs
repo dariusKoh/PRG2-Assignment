@@ -5,6 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using PRG2_Assignment.classes;
 
+/*
+//==========================================================
+// Student Number : S10257799G
+// Student Name : Giam Jun Xian Clive
+// Partner Name : Darius Koh Kai Keat
+//==========================================================
+*/
+
 namespace S10257799G_PRG2Assignment
 {
     internal class Cup : IceCream
