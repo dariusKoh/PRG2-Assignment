@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Clive_Program.cs" />
     <Compile Remove="Program.cs" />
   </ItemGroup>
 
