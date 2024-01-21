@@ -44,6 +44,8 @@ namespace PRG2_Assignment.classes
 
             IceCream newIceCream = new IceCream(newOrder[0]);
             */
+
+            
         }
 
         public void CalculateTotal(double n)
