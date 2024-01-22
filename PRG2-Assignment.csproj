@@ -8,9 +8,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Darius_Program.cs" />
-    <Compile Remove="Program.cs" />
-  </ItemGroup>
-
 </Project>
