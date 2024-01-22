@@ -19,20 +19,18 @@ namespace S10257799G_PRG2Assignment
         //Retrieve and set value of variables
         public string Type { get; set; }
         public bool Premium { get; set; }
-        public int Quantity { get; set; }
 
         public Flavour() { }
         //Object constructor
-        public Flavour(string _type, bool _premium, int _quantity)
+        public Flavour(string _type, bool _premium)
         {
             Type = _type;
             Premium = _premium;
-            Quantity = _quantity;
         }
 
         public override string ToString()
         {
-            return $"Type: {Type,-10}Premium: {Premium,-10}Quantity: {Quantity,-10}";
+            return $"Type: {Type,-10}Premium: {Premium,-10}";
         }
     }
 }
