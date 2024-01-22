@@ -22,7 +22,7 @@ namespace S10257799G_PRG2Assignment
 
         public Cone() { }
         //Object constructor
-        public Cone(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, bool _dipped) : base(option, scoops, flavours, toppings)
+        public Cone(string option, int scoops, bool _dipped, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings)
         {
             Dipped = _dipped;
         }
