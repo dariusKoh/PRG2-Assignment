@@ -186,12 +186,26 @@ namespace PRG2_Assignment.classes
         public override string ToString()
         {
             string ICListOut = "";
+            IceCream temp;
             foreach (IceCream i in IceCreamList)
             {
-                ICListOut += i.ToString();
+                string type = i.Option;
+                if (type == "Cup") 
+                { 
+                    temp = (Cup)i; 
+                }
+                else if(type == "Cone") 
+                { 
+                    temp = (Cone)i; 
+                }
+                else 
+                { 
+                    temp =  (Waffle)i; 
+                }
+                ICListOut += "\n" + temp.ToString();
             }
 
-            return $"Id: {Id}, Time Recieved: {TimeReceived}, Time Fulfilled: {TimeFulfilled}\nIce Cream List: {ICListOut}";
+            return $"Id: {Id}, Time Recieved: {TimeReceived}, Time Fulfilled: {TimeFulfilled}\nIce Cream List{ICListOut}";
         }
     }
 }

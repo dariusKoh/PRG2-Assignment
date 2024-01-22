@@ -60,7 +60,10 @@ namespace S10257799G_PRG2Assignment
             return price;
         }
 
-
+        public override string ToString()
+        {
+            return base.ToString() + $"{"",-5}Waffle Flavour: {WaffleFlavour}";
+        }
 
     }
 }
