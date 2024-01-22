@@ -1,2 +1,4 @@
 .vs/
 obj/
+bin/
+bin/Debug/net8.0/
