@@ -8,7 +8,7 @@ using System.Reflection;
 
 void ListAllCustomers()
 {
-    string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"data\customers.csv");
+    string path = "customers.csv";
     string[] customers = File.ReadAllLines(path);
     //string[] customers = File.ReadAllLines("../../data/customers.csv");
     foreach (string customer in customers)
