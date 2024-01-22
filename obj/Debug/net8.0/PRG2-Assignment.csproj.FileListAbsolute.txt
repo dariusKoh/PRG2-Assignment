@@ -13,3 +13,8 @@ C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\refint\PRG2-Assignment.d
 C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.pdb
 C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\PRG2-Assignment.genruntimeconfig.cache
 C:\NP\PRG2\Assessments\PRG2-Assignment\obj\Debug\net8.0\ref\PRG2-Assignment.dll
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\data\customers.csv
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\data\flavours.csv
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\data\options.csv
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\data\orders.csv
+C:\NP\PRG2\Assessments\PRG2-Assignment\bin\Debug\net8.0\data\toppings.csv

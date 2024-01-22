@@ -4,16 +4,17 @@
 //==========================================================
 
 // Basic 1 : Darius
+using PRG2_Assignment.classes;
 using System.Reflection;
 
 void ListAllCustomers()
 {
-    string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"data\customers.csv");
-    string[] customers = File.ReadAllLines(path);
-    //string[] customers = File.ReadAllLines("../../data/customers.csv");
-    foreach (string customer in customers)
+    string[] customers = File.ReadAllLines("data/customers.csv");
+    foreach (string i in customers)
     {
-        Console.WriteLine(customer);
+        if (i == "Name,MemberId,DOB,MembershipStatus,MembershipPoints,PunchCard")
+            continue;
+        Console.WriteLine(i);
     }
 }
 ListAllCustomers();
