@@ -148,12 +148,12 @@ namespace PRG2_Assignment.classes
             }
             else if (iceCreamData[0] == "cone")
             {
-                IceCream newIceCream = new Cone(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), flList, tList, Convert.ToBoolean(iceCreamData[1]));
+                IceCream newIceCream = new Cone(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), Convert.ToBoolean(iceCreamData[1]), flList, tList);
                 return newIceCream;
             }
             else
             {
-                IceCream newIceCream = new Waffle(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), flList, tList, Convert.ToString(iceCreamData[1]));
+                IceCream newIceCream = new Waffle(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), Convert.ToString(iceCreamData[1]), flList, tList);
                 return newIceCream;
             }
         }

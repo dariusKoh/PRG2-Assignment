@@ -20,7 +20,7 @@ namespace S10257799G_PRG2Assignment
         public string WaffleFlavour { get; set; }
 
         string[] flavourIndex = ["Red Velvet", "Charcoal", "Pandan"];
-        public Waffle(string option, int scoops, List<Flavour> flavours, List<Topping> toppings, string _waffleflavour) : base(option, scoops, flavours, toppings)
+        public Waffle(string option, int scoops, string _waffleflavour, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings)
         {
             WaffleFlavour = _waffleflavour;
         }
