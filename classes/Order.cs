@@ -130,9 +130,10 @@ namespace PRG2_Assignment.classes
                 {
                     if (flavours.IndexOf(fOption) > 2)
                     {
-                        flList.Add(new Flavour(fOption, true, 1));
+                        flList.Add(new Flavour(fOption, true));
                         break;
                     }
+                    flList.Add(new Flavour(fOption, false));
                     break;
                 }
                 else
