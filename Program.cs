@@ -25,7 +25,7 @@ ListAllCustomers();
 void ListAllOrders()
 {
     
-    List<string> flavours = new List<string> { "vanilla", "chocolate", "strawberry", "durian", "ube", "sea salt" };
+    List<string> flavours = new List<string> { "durian", "ube", "sea salt" };
     List<Order> orderList = new List<Order>();
     using (StreamReader sr = new StreamReader("data/orders.csv"))
     {
@@ -33,7 +33,6 @@ void ListAllOrders()
         if (s != null) 
         {
             string[] heading = s.Split(",");
-            Console.WriteLine(heading.Count());
         }
         
         while ((s = sr.ReadLine()) != null)
@@ -42,6 +41,7 @@ void ListAllOrders()
             orderList.Add(new Order(Convert.ToInt32(temp[0]), Convert.ToDateTime(temp[2])));
             List<Flavour> flavourList = new List<Flavour>();
             List<Topping>toppingList = new List<Topping>();
+
             for (int i = 8; i<11; i++)
             {
                 if (temp[i] != "")
@@ -52,7 +52,8 @@ void ListAllOrders()
                     flavourList.Add(tempFlavour);
                 }
             }
-            for (int i = 12; i < 15; i++)
+
+            for (int i = 11; i < 15; i++)
             {
                 if (temp[i] != "")
                 {
@@ -60,7 +61,7 @@ void ListAllOrders()
                     toppingList.Add(tempTopping);
                 }
             }
-
+            
             if (temp[4] == "Cup")
             {
                 IceCream tempIceCream = new Cup(temp[4], Convert.ToInt32(temp[5]), flavourList, toppingList);
@@ -101,6 +102,7 @@ void ListAllOrders()
         Console.WriteLine(order.ToString() + "\n------------");
     }
 }
+
 ListAllOrders();
 // Basic 3 : Darius
 
