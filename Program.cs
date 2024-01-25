@@ -24,8 +24,8 @@ ListAllCustomers();
 // Basic 2 : Clive
 void ListAllOrders()
 {
-    
-    List<string> flavours = new List<string> { "durian", "ube", "sea salt" };
+
+    List<string[]> flavours = getFlavours();
     List<Order> orderList = new List<Order>();
     using (StreamReader sr = new StreamReader("data/orders.csv"))
     {
@@ -47,7 +47,14 @@ void ListAllOrders()
                 if (temp[i] != "")
                 {
                     bool premium = false;
-                    if (flavours.Contains(temp[i].ToLower())) { premium = true; }
+                    foreach(var array in flavours)
+                    {
+                        if (array[0] == temp[i].ToLower() && array[1] == "2") 
+                        { 
+                            premium = true;
+                            break;
+                        }
+                    }
                     Flavour tempFlavour = new Flavour(temp[i], premium);
                     flavourList.Add(tempFlavour);
                 }
@@ -101,6 +108,22 @@ void ListAllOrders()
     {
         Console.WriteLine(order.ToString() + "\n------------");
     }
+}
+
+List<string[]> getFlavours()
+{
+    List<string[]> output = new List<string[]>();
+    using (StreamReader sr = new StreamReader("data/flavours.csv"))
+    {
+        string? s = sr.ReadLine();
+        while((s = sr.ReadLine()) != null)
+        {
+            string[] temp = s.Split(",");
+            temp[0] = temp[0].ToLower();
+            output.Add(temp);
+        }
+    }
+    return output;
 }
 
 ListAllOrders();
