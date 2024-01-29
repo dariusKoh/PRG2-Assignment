@@ -21,18 +21,38 @@ void ListAllCustomers()
 }
 ListAllCustomers();
 
+
 // Basic 2 : Clive
-List<Order> orderList = new List<Order>();
-void ListAllOrders()
+void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
 {
+    Console.WriteLine("Current orders in Gold Queue");
+    foreach(Order item in goldQueue)
+    {
+        Console.WriteLine(item.ToString() + "\n------------");
+    }
+    Console.WriteLine("Current orders in Regular Queue");
+    foreach (Order item in normalQueue)
+    {
+        Console.WriteLine(item.ToString() + "\n------------");
+    }
+}
+//ListCurrentOrders(goldQueue, normalQueue);
+// Basic 3 : Darius
 
 
-    getOrders(orderList);
+// Basic 4 : Darius
+
+
+// Basic 5 : Clive
+List<Order> orderList = new List<Order>();
+getOrders(orderList);
+/*void ListAllOrders()
+{
     foreach (Order order in orderList)
     {
         Console.WriteLine(order.ToString() + "\n------------");
     }
-}
+}*/
 
 
 List<string[]> getFlavours()
@@ -41,7 +61,7 @@ List<string[]> getFlavours()
     using (StreamReader sr = new StreamReader("data/flavours.csv"))
     {
         string? s = sr.ReadLine();
-        while((s = sr.ReadLine()) != null)
+        while ((s = sr.ReadLine()) != null)
         {
             string[] temp = s.Split(",");
             temp[0] = temp[0].ToLower();
@@ -132,15 +152,7 @@ void getOrders(List<Order> orderList)
         }
     }
 }
-ListAllOrders();
-// Basic 3 : Darius
-
-
-// Basic 4 : Darius
-
-
-// Basic 5 : Clive
-
+//ListAllOrders();
 
 // Basic 6 : Clive
 
