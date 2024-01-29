@@ -67,7 +67,9 @@ ListAllCustomers();
 
 // Basic 5 : Clive
 List<Order> orderList = new List<Order>();
+List<Customer> customerList = new List<Customer>();
 getOrders(orderList);
+getCustomers(customerList);
 void ListAllOrders()
 {
     foreach (Order order in orderList)
@@ -173,7 +175,7 @@ void getOrders(List<Order> orderList)
         }
     }
 }
-ListAllOrders();
+
 foreach(Order order in orderList)
 {
     foreach(var iceCream in order.IceCreamList)
@@ -191,8 +193,11 @@ void getCustomers(List<Customer> customerList)
         while((s = sr.ReadLine()) != null)
         {
             string[] temp = s.Split(",");
-            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]), temp[3]);
-            customerList.Add(new Customer(temp[0], Convert.ToInt32(temp[1])), Convert.ToDateTime(temp[2]));
+            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
+            tempCard.CheckTierUpgrade();
+            Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), Convert.ToDateTime(temp[2]));
+            tempCustomer.Rewards = tempCard;
+            customerList.Add(tempCustomer);
         }
     }
 }
