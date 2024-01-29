@@ -39,8 +39,28 @@ void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
     }
 }
 //ListCurrentOrders(goldQueue, normalQueue);
-// Basic 3 : Darius
 
+// Basic 3 : Darius
+void RegisterNewCustomer()
+{
+    Console.Write("Enter customer information in the following format (name;id number;date of birth): ");
+    string[] newCustomerInfo = Console.ReadLine().Split(';');
+
+    Customer newCustomer = new Customer(newCustomerInfo[0], Convert.ToInt32(newCustomerInfo[1]), Convert.ToDateTime(newCustomerInfo[2]));
+    PointCard newPointCard = new PointCard(0, 0);
+
+    newCustomer.Rewards = newPointCard;
+
+    string writeToFile = $"{newCustomer.Name},{newCustomer.MemberId},{newCustomer.DoB.ToString("MM/dd/yyyy")},{newPointCard.Tier},{newPointCard.Points},{newPointCard.PunchCard}";
+
+
+    using (StreamWriter sw = new StreamWriter("data/customers.csv", true))
+    {
+        sw.WriteLine(writeToFile);
+    }
+}
+RegisterNewCustomer();
+ListAllCustomers();
 
 // Basic 4 : Darius
 
