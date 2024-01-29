@@ -25,7 +25,6 @@ namespace S10257799G_PRG2Assignment
         public Cone(string option, int scoops, bool _dipped, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings)
         {
             Dipped = _dipped;
-            getPrices();
         }
 
         public void getPrices()
@@ -43,11 +42,12 @@ namespace S10257799G_PRG2Assignment
         }
         public override double CalculatePrice()
         {
+            getPrices();
             //Calculate how much is owed for toppings
             double price = (1 * Toppings.Count());
             //Match the price of scoops to the quantity
             //Check if the cone is dipped and adjust the price if so
-            foreach (var array in Prices) 
+            foreach (string[] array in Prices) 
             { 
                 if (Option == array[0] && Scoops == Convert.ToInt32(array[1]) && Convert.ToBoolean(array[2]) == Dipped)
                 {

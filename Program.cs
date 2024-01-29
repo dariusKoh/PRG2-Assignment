@@ -46,14 +46,13 @@ void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
 // Basic 5 : Clive
 List<Order> orderList = new List<Order>();
 getOrders(orderList);
-/*void ListAllOrders()
+void ListAllOrders()
 {
     foreach (Order order in orderList)
     {
         Console.WriteLine(order.ToString() + "\n------------");
     }
-}*/
-
+}
 
 List<string[]> getFlavours()
 {
@@ -152,7 +151,29 @@ void getOrders(List<Order> orderList)
         }
     }
 }
-//ListAllOrders();
+ListAllOrders();
+foreach(Order order in orderList)
+{
+    foreach(var iceCream in order.IceCreamList)
+    {
+        Console.WriteLine(iceCream.CalculatePrice());
+    }
+}
+
+void getCustomers(List<Customer> customerList)
+{
+    using (StreamReader sr = new StreamReader("data/customers.csv"))
+    {
+        string? s = sr.ReadLine();
+        if (s != null) { string[] heading =  s.Split(',');}
+        while((s = sr.ReadLine()) != null)
+        {
+            string[] temp = s.Split(",");
+            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]), temp[3]);
+            customerList.Add(new Customer(temp[0], Convert.ToInt32(temp[1])), Convert.ToDateTime(temp[2]));
+        }
+    }
+}
 
 // Basic 6 : Clive
 
