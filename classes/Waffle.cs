@@ -18,37 +18,40 @@ namespace S10257799G_PRG2Assignment
     internal class Waffle : IceCream
     {
         public string WaffleFlavour { get; set; }
-
-        string[] flavourIndex = ["Red Velvet", "Charcoal", "Pandan"];
+    
+        public Waffle() { }
         public Waffle(string option, int scoops, string _waffleflavour, List<Flavour> flavours, List<Topping> toppings) : base(option, scoops, flavours, toppings)
         {
             WaffleFlavour = _waffleflavour;
         }
 
+        public void getPrices()
+        {
+            using (StreamReader sr = new StreamReader("data/options.csv"))
+            {
+                string? s = sr.ReadLine();
+                if (s != null) { string[] heading = s.Split(","); }
+                while ((s = sr.ReadLine()) != null)
+                {
+                    string[] temp = s.Split(",");
+                    Prices.Add(temp);
+                }
+            }
+        }
         public override double CalculatePrice()
         {
+            getPrices();
             double price = (1 * Toppings.Count());
             //Match the price of scoops to the quantity
-            switch (Scoops)
+            foreach (string[] array in Prices)
             {
-                case 1:
-                    price += 7;
+                if (Option == array[0] && Scoops == Convert.ToInt32(array[1]) && WaffleFlavour == array[3])
+                {
+                    price += Convert.ToDouble(array[4]);
+                    Console.WriteLine(price);  
                     break;
-                case 2:
-                    price += 8.50;
-                    break;
-                case 3:
-                    price += 9.50;
-                    break;
-                default:
-                    break;
+                }
             }
-
-            if (flavourIndex.Contains(WaffleFlavour))
-            {
-                price += 3;
-            }
-
             foreach (Flavour item in Flavours)
             {
                 if (item.Premium == true)

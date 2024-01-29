@@ -27,33 +27,33 @@ namespace S10257799G_PRG2Assignment
             Dipped = _dipped;
         }
 
+        public void getPrices()
+        {
+            using (StreamReader sr = new StreamReader("data/options.csv"))
+            {
+                string? s = sr.ReadLine();
+                if (s != null) { string[] heading = s.Split(","); }
+                while ((s = sr.ReadLine()) != null)
+                {
+                    string[] temp = s.Split(",");
+                    Prices.Add(temp);
+                }
+            }
+        }
         public override double CalculatePrice()
         {
+            getPrices();
             //Calculate how much is owed for toppings
             double price = (1 * Toppings.Count());
             //Match the price of scoops to the quantity
-            switch (Scoops)
-            {
-                case 1:
-                    price += 4;
-                    break;
-                case 2:
-                    price += 5.50;
-                    break;
-                case 3:
-                    price += 6.50;
-                    break;
-                default:
-                    break;
-            }
             //Check if the cone is dipped and adjust the price if so
-            switch (Dipped)
-            {
-                case true:
-                    price += 2;
+            foreach (string[] array in Prices) 
+            { 
+                if (Option == array[0] && Scoops == Convert.ToInt32(array[1]) && Convert.ToBoolean(array[2]) == Dipped)
+                {
+                    price += Convert.ToDouble(array[4]);
                     break;
-                default:
-                    break;
+                }
             }
             //Check the number of premium scoops and add it to the price
             foreach (Flavour item in Flavours)
@@ -63,7 +63,6 @@ namespace S10257799G_PRG2Assignment
                     price += 2;
                 }
             }
-
             return price;
         }
 

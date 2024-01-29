@@ -23,19 +23,38 @@ void ListAllCustomers()
 }
 ListAllCustomers();
 
+
 // Basic 2 : Clive
+void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
+{
+    Console.WriteLine("Current orders in Gold Queue");
+    foreach(Order item in goldQueue)
+    {
+        Console.WriteLine(item.ToString() + "\n------------");
+    }
+    Console.WriteLine("Current orders in Regular Queue");
+    foreach (Order item in normalQueue)
+    {
+        Console.WriteLine(item.ToString() + "\n------------");
+    }
+}
+//ListCurrentOrders(goldQueue, normalQueue);
+// Basic 3 : Darius
+
+
+// Basic 4 : Darius
+
+
+// Basic 5 : Clive
 List<Order> orderList = new List<Order>();
+getOrders(orderList);
 void ListAllOrders()
 {
-
-
-    getOrders(orderList);
     foreach (Order order in orderList)
     {
         Console.WriteLine(order.ToString() + "\n------------");
     }
 }
-
 
 List<string[]> getFlavours()
 {
@@ -43,7 +62,7 @@ List<string[]> getFlavours()
     using (StreamReader sr = new StreamReader("data/flavours.csv"))
     {
         string? s = sr.ReadLine();
-        while((s = sr.ReadLine()) != null)
+        while ((s = sr.ReadLine()) != null)
         {
             string[] temp = s.Split(",");
             temp[0] = temp[0].ToLower();
@@ -135,34 +154,28 @@ void getOrders(List<Order> orderList)
     }
 }
 ListAllOrders();
-
-// Basic 3 : Darius
-void RegisterNewCustomer()
+foreach(Order order in orderList)
 {
-    Console.Write("Enter customer information in the following format (name;id number;date of birth): ");
-    string[] newCustomerInfo = Console.ReadLine().Split(';');
-
-    Customer newCustomer = new Customer(newCustomerInfo[0], Convert.ToInt32(newCustomerInfo[1]), Convert.ToDateTime(newCustomerInfo[2]));
-    PointCard newPointCard = new PointCard(0, 0);
-
-    newCustomer.Rewards = newPointCard;
-
-    string writeToFile = $"{newCustomer.Name},{newCustomer.MemberId},{newCustomer.DoB.ToString("MM/dd/yyyy")},{newPointCard.Tier},{newPointCard.Points},{newPointCard.PunchCard}";
-
-
-    using (StreamWriter sw = new StreamWriter("data/customers.csv", true))
+    foreach(var iceCream in order.IceCreamList)
     {
-        sw.WriteLine(writeToFile); 
+        Console.WriteLine(iceCream.CalculatePrice());
     }
 }
-RegisterNewCustomer();
-ListAllCustomers();
 
-// Basic 4 : Darius
-
-
-// Basic 5 : Clive
-
+void getCustomers(List<Customer> customerList)
+{
+    using (StreamReader sr = new StreamReader("data/customers.csv"))
+    {
+        string? s = sr.ReadLine();
+        if (s != null) { string[] heading =  s.Split(',');}
+        while((s = sr.ReadLine()) != null)
+        {
+            string[] temp = s.Split(",");
+            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]), temp[3]);
+            customerList.Add(new Customer(temp[0], Convert.ToInt32(temp[1])), Convert.ToDateTime(temp[2]));
+        }
+    }
+}
 
 // Basic 6 : Clive
 
