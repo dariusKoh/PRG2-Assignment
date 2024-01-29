@@ -25,6 +25,20 @@ namespace PRG2_Assignment.classes
         {
             Points = points;
             PunchCard = punchCard;
+            Tier = "Ordinary";
+        }
+
+        public void CheckTierUpgrade()
+        {
+            if (Tier == "Ordinary" && Points >= 50)
+            {
+                Tier = "Silver";
+            }
+
+            else if (Tier == "Silver" && Points >= 100)
+            {
+                Tier = "Gold";
+            }
         }
 
         public void AddPoints(int amount)
