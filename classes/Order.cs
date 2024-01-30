@@ -143,8 +143,7 @@ namespace PRG2_Assignment.classes
             if (iceCreamData[0] == "cup")
             {
                 IceCream newIceCream = new Cup(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[1]), flList, tList);
-                return newIceCream;
-
+                return newIceCream; 
             }
             else if (iceCreamData[0] == "cone")
             {

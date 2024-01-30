@@ -27,8 +27,9 @@ List<string[]> getFlavours()
     }
     return output;
 }
+
 //Read customers.csv and create customers
-void getCustomers(List<Customer> customerList)
+void getCustomers(List<Customer> customerList) 
 {
     using (StreamReader sr = new StreamReader("data/customers.csv"))
     {
@@ -151,18 +152,16 @@ List<Customer> customerList = new List<Customer>();
 getCustomers(customerList);
 getOrders(orderList, customerList);
 
-Console.WriteLine(customerList.Count());
 // Basic 1 : Darius
-
-
 void ListAllCustomers()
 {
     string[] customers = File.ReadAllLines("data/customers.csv");
-    foreach (string i in customers)
+    for (int i = 1; i < customers.Length; i++)//foreach (string i in customers)
     {
-        if (i == "Name,MemberId,DOB,MembershipStatus,MembershipPoints,PunchCard")
+        if (customers[i] == "Name,MemberId,DOB,MembershipStatus,MembershipPoints,PunchCard")
             continue;
-        Console.WriteLine(i);
+        string[] customerData = customers[i].Split(',');
+        Console.WriteLine($"{i,-4}{customerData[0],-15}{customerData[1],-8}{customerData[2],-12}{customerData[3],-10}{customerData[4],-5}{customerData[5]}");
     }
 }
 ListAllCustomers();
@@ -207,19 +206,26 @@ void RegisterNewCustomer()
 //ListAllCustomers();
 
 // Basic 4 : Darius
+void CreateCustomerOrder()
+{
+    ListAllCustomers();
 
+
+}
 
 // Basic 5 : Clive
 
 void ListAllOrders(List<Customer> customerList)
 {
     Console.WriteLine("Customers" + "\n------------");
+    ListAllCustomers();
+    /*
     for (int i = 0;i< customerList.Count; i++) 
     {
         Customer tempCustomer = customerList[i];
-        Console.WriteLine($"\n[{i}]\n{tempCustomer.ToString()}");   
+        Console.WriteLine($"\n[{i+1}]\n{tempCustomer.ToString()}");
     }
-
+    */
    
     while (true)
     {
