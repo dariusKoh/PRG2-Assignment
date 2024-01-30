@@ -45,8 +45,8 @@ namespace PRG2_Assignment.classes
             while (true)
             {
                 Console.Write("Please enter the option for your ice cream: ");
-                string option = Console.ReadLine();
-                if (options.Contains(option.ToLower()))
+                string option = Console.ReadLine().ToLower();
+                if (options.Contains(option))
                 {
                     iceCreamData.Add(option);
 
@@ -67,7 +67,7 @@ namespace PRG2_Assignment.classes
                             Console.WriteLine("Please enter either 'y' or 'n'.");
                     }
 
-                    else if (option.ToLower() == "waffle")
+                    else if (option == "waffle")
                     {
                         Console.Write("Which flavour of waffle would you like? (1. Original, 2. Red Velvet, 3. Charcoal, 4. Pandan): ");
                         try
@@ -104,7 +104,7 @@ namespace PRG2_Assignment.classes
             }
 
             int count = 0;
-            while (count < 3)
+            while (count < 4)
             {
                 Console.Write("Please enter a topping to add (n to cancel): ");
                 string tOption = Console.ReadLine().ToLower();
@@ -114,14 +114,20 @@ namespace PRG2_Assignment.classes
                 else if (toppings.Contains(tOption))
                 {
                     tList.Add(new Topping(tOption));
-                    break;
+                    count++;
                 }
                 else
                     Console.WriteLine("Please enter a valid topping between 'Sprinkles', 'Mochi', 'Sago' and 'Oreos'.");
             }
 
             count = 0;
-            while (count < iceCreamData.Count - 1)
+            int scoops = 0;
+            if ((string)iceCreamData[0] == "cup")
+                scoops = Convert.ToInt16(iceCreamData[1]);
+            else
+                scoops = Convert.ToInt16(iceCreamData[2]);
+
+            while (count < scoops)
             {
                 Console.Write("Please enter an ice cream flavour: ");
                 string fOption = Console.ReadLine().ToLower();
@@ -131,21 +137,22 @@ namespace PRG2_Assignment.classes
                     if (flavours.IndexOf(fOption) > 2)
                     {
                         flList.Add(new Flavour(fOption, true));
-                        break;
+                        
                     }
-                    flList.Add(new Flavour(fOption, false));
-                    break;
+                    else
+                        flList.Add(new Flavour(fOption, false));
+                    count++;
                 }
                 else
                     Console.WriteLine("Please enter a valid flavour'.");
             }
 
-            if (iceCreamData[0] == "cup")
+            if ((string)iceCreamData[0] == "cup")
             {
                 IceCream newIceCream = new Cup(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[1]), flList, tList);
                 return newIceCream; 
             }
-            else if (iceCreamData[0] == "cone")
+            else if ((string)iceCreamData[0] == "cone")
             {
                 IceCream newIceCream = new Cone(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), Convert.ToBoolean(iceCreamData[1]), flList, tList);
                 return newIceCream;

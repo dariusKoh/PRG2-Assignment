@@ -164,7 +164,7 @@ void ListAllCustomers()
         Console.WriteLine($"{i,-4}{customerData[0],-15}{customerData[1],-8}{customerData[2],-12}{customerData[3],-10}{customerData[4],-5}{customerData[5]}");
     }
 }
-ListAllCustomers();
+//ListAllCustomers();
 
 
 // Basic 2 : Clive
@@ -206,12 +206,7 @@ void RegisterNewCustomer()
 //ListAllCustomers();
 
 // Basic 4 : Darius
-void CreateCustomerOrder()
-{
-    ListAllCustomers();
 
-
-}
 
 // Basic 5 : Clive
 
@@ -246,7 +241,7 @@ void ListAllOrders(List<Customer> customerList)
 
     
 }
-ListAllOrders(customerList);
+//ListAllOrders(customerList);
 // Basic 6 : Clive
 
 
