@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\d4riu\\OneDrive\\Desktop\\prg2\\PRG2-Assignment.csproj": {}
+    "C:\\Users\\d4riu\\OneDrive\\Desktop\\PRG2-Assignment\\PRG2-Assignment.csproj": {}
   },
   "projects": {
-    "C:\\Users\\d4riu\\OneDrive\\Desktop\\prg2\\PRG2-Assignment.csproj": {
+    "C:\\Users\\d4riu\\OneDrive\\Desktop\\PRG2-Assignment\\PRG2-Assignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\d4riu\\OneDrive\\Desktop\\prg2\\PRG2-Assignment.csproj",
+        "projectUniqueName": "C:\\Users\\d4riu\\OneDrive\\Desktop\\PRG2-Assignment\\PRG2-Assignment.csproj",
         "projectName": "PRG2-Assignment",
-        "projectPath": "C:\\Users\\d4riu\\OneDrive\\Desktop\\prg2\\PRG2-Assignment.csproj",
+        "projectPath": "C:\\Users\\d4riu\\OneDrive\\Desktop\\PRG2-Assignment\\PRG2-Assignment.csproj",
         "packagesPath": "C:\\Users\\d4riu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\d4riu\\OneDrive\\Desktop\\prg2\\obj\\",
+        "outputPath": "C:\\Users\\d4riu\\OneDrive\\Desktop\\PRG2-Assignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\d4riu\\AppData\\Roaming\\NuGet\\NuGet.Config",
