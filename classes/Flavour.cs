@@ -30,7 +30,7 @@ namespace S10257799G_PRG2Assignment
 
         public override string ToString()
         {
-            return $"Type: {Type,-10} Premium: {Premium,-10}";
+            return $"Type: {Type,-5} Premium: {Premium}";
         }
     }
 }

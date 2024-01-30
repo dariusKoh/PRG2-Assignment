@@ -74,9 +74,29 @@ void getOrders(List<Order> orderList, List<Customer> customerList)
         {
             string[] temp = s.Split(",");
             Customer tempCustomer = associateCustomer(temp, customerList);
-            Order tempOrder = new Order(Convert.ToInt32(temp[0]), Convert.ToDateTime(temp[2]));
-            tempOrder.TimeFulfilled = Convert.ToDateTime(temp[3]);
-            orderList.Add(tempOrder);
+            Order tempOrder = new Order();
+            bool idExists = false;
+
+            foreach (Order order in orderList)
+            {
+                if (order.Id == Convert.ToInt32(temp[0]))
+                {
+                    tempOrder = order;
+                    idExists = true;
+                    break;
+                }
+            }
+
+            if (idExists == false)
+            {
+                tempOrder = new Order(Convert.ToInt32(temp[0]), Convert.ToDateTime(temp[2]));
+                tempOrder.TimeFulfilled = Convert.ToDateTime(temp[3]);
+                orderList.Add(tempOrder);
+                tempCustomer.OrderHistory.Add(tempOrder);
+            }
+
+            int orderIndex = tempCustomer.OrderHistory.IndexOf(tempOrder);
+            Order customerHistory = tempCustomer.OrderHistory[orderIndex];
             List<Flavour> flavourList = new List<Flavour>();
             List<Topping> toppingList = new List<Topping>();
 
@@ -114,8 +134,8 @@ void getOrders(List<Order> orderList, List<Customer> customerList)
                 {
                     if (order.Id == Convert.ToInt32(temp[0]))
                     {
-                        order.AddIceCream(tempIceCream);
-                        tempCustomer.OrderHistory.Add(order);
+                        customerHistory.IceCreamList.Add(tempIceCream);
+                        break;
                     }
                 }
             }
@@ -126,8 +146,8 @@ void getOrders(List<Order> orderList, List<Customer> customerList)
                 {
                     if (order.Id == Convert.ToInt32(temp[0]))
                     {
-                        order.AddIceCream(tempIceCream);
-                        tempCustomer.OrderHistory.Add(order);
+                        customerHistory.IceCreamList.Add(tempIceCream);
+                        break;
                     }
                 }
             }
@@ -138,8 +158,8 @@ void getOrders(List<Order> orderList, List<Customer> customerList)
                 {
                     if (order.Id == Convert.ToInt32(temp[0]))
                     {
-                        order.AddIceCream(tempIceCream);
-                        tempCustomer.OrderHistory.Add(order);
+                        customerHistory.IceCreamList.Add(tempIceCream);
+                        break;
                     }
                 }
             }
@@ -219,32 +239,106 @@ void ListAllOrders(List<Customer> customerList)
 {
     Console.WriteLine("Customers" + "\n------------");
     ListAllCustomers();
-    /*
-    for (int i = 0;i< customerList.Count; i++) 
-    {
-        Customer tempCustomer = customerList[i];
-        Console.WriteLine($"\n[{i+1}]\n{tempCustomer.ToString()}");
-    }
-    */
-   
+    int option = 0;
     while (true)
     {
         Console.Write("Enter the customer number: ");
-        int option = 0;
         try
         {
-            option = Convert.ToInt32(Console.ReadLine()) - 1;
+            option = Convert.ToInt32(Console.ReadLine());
         }
-        catch (FormatException) { Console.WriteLine("Invalid input, must be an integer."); }
-        if (option < 0 || option > customerList.Count())
+        catch (FormatException) 
+        { 
+            Console.WriteLine("Invalid input, must be an integer.");  
+            continue; 
+        }
+        if (option <= 0 || option > customerList.Count())
         {
-            Console.WriteLine($"Input out of range, please enter an integer within 1 and {customerList.Count()}");
+            Console.WriteLine($"Input out of range, please enter an integer within 1 and {customerList.Count()}.");
+            continue;
         }
-        else { break; }
-           
+        else { break; } 
     }
+    option -= 1;
+    Console.WriteLine(option);
+    Customer selectCustomer = customerList[option];
+    //Order currentOrder = selectCustomer.CurrentOrder;
+    Order currentOrder = selectCustomer.OrderHistory[0];
+    List<Order> orderHistory = selectCustomer.OrderHistory;
 
-    
+    Console.WriteLine($"---------Current Order---------\nId: {currentOrder.Id}\nTime received: {currentOrder.TimeReceived}\n-------------------------------");
+
+    foreach(IceCream iceCream in currentOrder.IceCreamList)
+    {
+        string allFlavours = "";
+        string allToppings = "";
+        foreach(Flavour item in iceCream.Flavours)
+        {
+            allFlavours += $"\n{item.ToString()}";
+        }
+        foreach (Topping item in iceCream.Toppings)
+        {
+            allToppings += $"\n{item.ToString()}";
+        }
+
+        string baseOut = $"Option: {iceCream.Option}\nScoops: {iceCream.Scoops}\n---------\nFlavours\n---------{allFlavours}\n---------\nToppings\n---------{allToppings}\n---------";
+
+        if (iceCream.Option == "Cup")
+        {
+            Console.WriteLine(baseOut);
+        }
+        else if (iceCream.Option == "Cone")
+        {
+            Cone temp = (Cone)iceCream;
+            baseOut += $"\nDipped: {temp.Dipped}\n---------";
+            Console.WriteLine(baseOut);
+        }
+        else if (iceCream.Option == "Waffle")
+        {
+            Waffle temp = (Waffle)iceCream;
+            baseOut += $"\nWaffle flavour: {temp.WaffleFlavour}\n---------";
+            Console.WriteLine(baseOut);
+        }
+
+    }
+    Console.WriteLine("---------Order History---------");
+    Console.WriteLine(orderHistory.Count);
+    foreach(Order order in orderHistory)
+    {
+        foreach (IceCream iceCream in order.IceCreamList)
+        {
+            string allFlavours = "";
+            string allToppings = "";
+            foreach (Flavour item in iceCream.Flavours)
+            {
+                allFlavours += $"\n{item.ToString()}";
+            }
+            foreach (Topping item in iceCream.Toppings)
+            {
+                allToppings += $"\n{item.ToString()}";
+            }
+
+            string baseOut = $"Option: {iceCream.Option}\nScoops: {iceCream.Scoops}\n---------\nFlavours\n---------{allFlavours}\n---------\nToppings\n---------{allToppings}\n---------";
+
+            if (iceCream.Option == "Cup")
+            {
+                Console.WriteLine(baseOut);
+            }
+            else if (iceCream.Option == "Cone")
+            {
+                Cone temp = (Cone)iceCream;
+                baseOut += $"\nDipped: {temp.Dipped}\n---------";
+                Console.WriteLine(baseOut);
+            }
+            else if (iceCream.Option == "Waffle")
+            {
+                Waffle temp = (Waffle)iceCream;
+                baseOut += $"\nWaffle flavour: {temp.WaffleFlavour}\n---------";
+                Console.WriteLine(baseOut);
+            }
+
+        }
+    }
 }
 ListAllOrders(customerList);
 // Basic 6 : Clive
