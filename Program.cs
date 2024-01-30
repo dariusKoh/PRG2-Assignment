@@ -226,7 +226,52 @@ void RegisterNewCustomer()
 //ListAllCustomers();
 
 // Basic 4 : Darius
+void CreateCustomerOrder()
+{
+    ListAllCustomers();
+    Customer chosenCustomer = new Customer();
+    Order newOrder = new Order(orderList[orderList.Count - 1].Id + 1, DateTime.Now);
 
+    while (true)
+    {
+        try
+        {
+            Console.Write("Please select a customer from the list: ");
+            int chosenCustomerNum = Convert.ToInt16(Console.ReadLine());
+
+            chosenCustomer = customerList[chosenCustomerNum - 1];
+            break;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Please enter a valid customer.");
+        }
+    }
+    Console.WriteLine(chosenCustomer);
+
+    newOrder.AddIceCream(newOrder.CreateIceCream());
+    while (true)
+    {
+        Console.Write("Would you like to add another Ice Cream? (Y/N): ");
+        string additionalIceCream = Console.ReadLine().ToLower();
+
+        if (additionalIceCream == "y") { newOrder.AddIceCream(newOrder.CreateIceCream()); }
+        else { break; }
+    }
+    chosenCustomer.CurrentOrder = newOrder;
+
+    if (chosenCustomer.Rewards.Tier == "Gold")
+    {
+        // Queue code goes here
+    }
+    else
+    {
+        // Queue code goes here
+    }
+
+    Console.WriteLine($"Order for customer {chosenCustomer.Name} with order ID {newOrder.Id} has been placed in the queue.");
+}
+CreateCustomerOrder();
 
 // Basic 5 : Clive
 
