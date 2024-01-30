@@ -8,4 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PRG2_Assignment
-build_property.ProjectDir = /Users/dariuskoh/Desktop/PRG2-Assignment/
+build_property.ProjectDir = C:\Users\d4riu\OneDrive\Desktop\prg2\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

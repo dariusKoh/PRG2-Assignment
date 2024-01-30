@@ -10,7 +10,6 @@ using System.Data;
 using System.Reflection;
 using System.Reflection.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
 void ListAllCustomers()
 {
     string[] customers = File.ReadAllLines("data/customers.csv");
