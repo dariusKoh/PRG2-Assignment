@@ -68,7 +68,7 @@ namespace S10257799G_PRG2Assignment
 
         public override string ToString()
         {
-            return base.ToString() + $" Dipped: {Dipped}";
+            return base.ToString() + $"\nDipped: {Dipped}";
         }
     }
 }

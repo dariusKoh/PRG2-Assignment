@@ -50,13 +50,14 @@ namespace PRG2_Assignment.classes
 
         public override string ToString()
         {
+            /*
             string orderHistoryOut = "";
             foreach (Order i in OrderHistory)
             {
-                orderHistoryOut += i.ToString();
-            }
+                orderHistoryOut += $"\n\n{i.ToString()}";
+            }*/
 
-            return $"Name: {Name}, Member Id: {MemberId}, DoB: {DoB}, Current Order: {CurrentOrder}\nRewards: {Rewards}\nOrder History: {orderHistoryOut}";
+            return $"Name: {Name}, Member Id: {MemberId}, DoB: {DoB}, Current Order: {CurrentOrder}\nRewards: {Rewards}\n";
         }
     }
 }

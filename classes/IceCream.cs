@@ -50,7 +50,7 @@ namespace S10257799G_PRG2Assignment
             {
                 allToppings += " " + item.ToString();
             }
-            return $"Option:{Option,-12}Scoops:{Scoops,-10}Flavours:{allFlavours}Toppings:{allToppings}";
+            return $"Option:{Option}\nScoops:{Scoops}\nFlavours:{allFlavours}\nToppings:{allToppings}";
         }
 
     }

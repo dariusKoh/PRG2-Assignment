@@ -2,14 +2,158 @@
 // Student Name : Giam Jun Xian Clive (S10257799G)
 // Student Name : Darius Koh Kai Keat (S10255626K)
 //==========================================================
-
-// Basic 1 : Darius
 using PRG2_Assignment.classes;
 using S10257799G_PRG2Assignment;
 using System.Data;
 using System.Reflection;
 using System.Reflection.Metadata;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
+//Utility methods : Clive
+
+//Read flavours.csv
+List<string[]> getFlavours()
+{
+    List<string[]> output = new List<string[]>();
+    using (StreamReader sr = new StreamReader("data/flavours.csv"))
+    {
+        string? s = sr.ReadLine();
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] temp = s.Split(",");
+            temp[0] = temp[0].ToLower();
+            output.Add(temp);
+        }
+    }
+    return output;
+}
+//Read customers.csv and create customers
+void getCustomers(List<Customer> customerList)
+{
+    using (StreamReader sr = new StreamReader("data/customers.csv"))
+    {
+        string? s = sr.ReadLine();
+        if (s != null) { string[] heading = s.Split(','); }
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] temp = s.Split(",");
+            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
+            tempCard.CheckTierUpgrade();
+            Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), Convert.ToDateTime(temp[2]));
+            tempCustomer.Rewards = tempCard;
+            customerList.Add(tempCustomer);
+        }
+    }
+}
+//Assign an order to a customer based on member id
+Customer associateCustomer(string[] info, List<Customer> customerList)
+{
+    foreach(Customer temp in customerList)
+    {
+        if (Convert.ToInt32(info[1]) == temp.MemberId)
+        {
+            return temp;
+        }
+    }
+    return null;
+}
+//Read orders.csv and create orders
+void getOrders(List<Order> orderList, List<Customer> customerList)
+{
+    List<string[]> flavours = getFlavours();
+    using (StreamReader sr = new StreamReader("data/orders.csv"))
+    {
+        string? s = sr.ReadLine();
+        if (s != null)
+        {
+            string[] heading = s.Split(",");
+        }
+
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] temp = s.Split(",");
+            Customer tempCustomer = associateCustomer(temp, customerList);
+            Order tempOrder = new Order(Convert.ToInt32(temp[0]), Convert.ToDateTime(temp[2]));
+            tempOrder.TimeFulfilled = Convert.ToDateTime(temp[3]);
+            orderList.Add(tempOrder);
+            List<Flavour> flavourList = new List<Flavour>();
+            List<Topping> toppingList = new List<Topping>();
+
+            for (int i = 8; i < 11; i++)
+            {
+                if (temp[i] != "")
+                {
+                    bool premium = false;
+                    foreach (var array in flavours)
+                    {
+                        if (array[0] == temp[i].ToLower() && array[1] == "2")
+                        {
+                            premium = true;
+                            break;
+                        }
+                    }
+                    Flavour tempFlavour = new Flavour(temp[i], premium);
+                    flavourList.Add(tempFlavour);
+                }
+            }
+
+            for (int i = 11; i < 15; i++)
+            {
+                if (temp[i] != "")
+                {
+                    Topping tempTopping = new Topping(temp[i]);
+                    toppingList.Add(tempTopping);
+                }
+            }
+
+            if (temp[4] == "Cup")
+            {
+                IceCream tempIceCream = new Cup(temp[4], Convert.ToInt32(temp[5]), flavourList, toppingList);
+                foreach (Order order in orderList)
+                {
+                    if (order.Id == Convert.ToInt32(temp[0]))
+                    {
+                        order.AddIceCream(tempIceCream);
+                        tempCustomer.OrderHistory.Add(order);
+                    }
+                }
+            }
+            else if (temp[4] == "Cone")
+            {
+                IceCream tempIceCream = new Cone(temp[4], Convert.ToInt32(temp[5]), Convert.ToBoolean(temp[6]), flavourList, toppingList);
+                foreach (Order order in orderList)
+                {
+                    if (order.Id == Convert.ToInt32(temp[0]))
+                    {
+                        order.AddIceCream(tempIceCream);
+                        tempCustomer.OrderHistory.Add(order);
+                    }
+                }
+            }
+            else if (temp[4] == "Waffle")
+            {
+                IceCream tempIceCream = new Waffle(temp[4], Convert.ToInt32(temp[5]), temp[7], flavourList, toppingList);
+                foreach (Order order in orderList)
+                {
+                    if (order.Id == Convert.ToInt32(temp[0]))
+                    {
+                        order.AddIceCream(tempIceCream);
+                        tempCustomer.OrderHistory.Add(order);
+                    }
+                }
+            }
+        }
+    }
+}
+
+List<Order> orderList = new List<Order>();
+List<Customer> customerList = new List<Customer>();
+getCustomers(customerList);
+getOrders(orderList, customerList);
+
+Console.WriteLine(customerList.Count());
+// Basic 1 : Darius
+
 
 void ListAllCustomers()
 {
@@ -59,149 +203,44 @@ void RegisterNewCustomer()
         sw.WriteLine(writeToFile);
     }
 }
-RegisterNewCustomer();
-ListAllCustomers();
+//RegisterNewCustomer();
+//ListAllCustomers();
 
 // Basic 4 : Darius
 
 
 // Basic 5 : Clive
-List<Order> orderList = new List<Order>();
-List<Customer> customerList = new List<Customer>();
-getOrders(orderList);
-getCustomers(customerList);
-void ListAllOrders()
-{
-    foreach (Order order in orderList)
-    {
-        Console.WriteLine(order.ToString() + "\n------------");
-    }
-}
 
-List<string[]> getFlavours()
+void ListAllOrders(List<Customer> customerList)
 {
-    List<string[]> output = new List<string[]>();
-    using (StreamReader sr = new StreamReader("data/flavours.csv"))
+    Console.WriteLine("Customers" + "\n------------");
+    for (int i = 0;i< customerList.Count; i++) 
     {
-        string? s = sr.ReadLine();
-        while ((s = sr.ReadLine()) != null)
+        Customer tempCustomer = customerList[i];
+        Console.WriteLine($"\n[{i}]\n{tempCustomer.ToString()}");   
+    }
+
+   
+    while (true)
+    {
+        Console.Write("Enter the customer number: ");
+        int option = 0;
+        try
         {
-            string[] temp = s.Split(",");
-            temp[0] = temp[0].ToLower();
-            output.Add(temp);
+            option = Convert.ToInt32(Console.ReadLine()) - 1;
         }
-    }
-    return output;
-}
-
-void getOrders(List<Order> orderList)
-{
-    List<string[]> flavours = getFlavours();
-    using (StreamReader sr = new StreamReader("data/orders.csv"))
-    {
-        string? s = sr.ReadLine();
-        if (s != null)
+        catch (FormatException) { Console.WriteLine("Invalid input, must be an integer."); }
+        if (option < 0 || option > customerList.Count())
         {
-            string[] heading = s.Split(",");
+            Console.WriteLine($"Input out of range, please enter an integer within 1 and {customerList.Count()}");
         }
-
-        while ((s = sr.ReadLine()) != null)
-        {
-            string[] temp = s.Split(",");
-            orderList.Add(new Order(Convert.ToInt32(temp[0]), Convert.ToDateTime(temp[2])));
-            List<Flavour> flavourList = new List<Flavour>();
-            List<Topping> toppingList = new List<Topping>();
-
-            for (int i = 8; i < 11; i++)
-            {
-                if (temp[i] != "")
-                {
-                    bool premium = false;
-                    foreach (var array in flavours)
-                    {
-                        if (array[0] == temp[i].ToLower() && array[1] == "2")
-                        {
-                            premium = true;
-                            break;
-                        }
-                    }
-                    Flavour tempFlavour = new Flavour(temp[i], premium);
-                    flavourList.Add(tempFlavour);
-                }
-            }
-
-            for (int i = 11; i < 15; i++)
-            {
-                if (temp[i] != "")
-                {
-                    Topping tempTopping = new Topping(temp[i]);
-                    toppingList.Add(tempTopping);
-                }
-            }
-
-            if (temp[4] == "Cup")
-            {
-                IceCream tempIceCream = new Cup(temp[4], Convert.ToInt32(temp[5]), flavourList, toppingList);
-                foreach (Order order in orderList)
-                {
-                    if (order.Id == Convert.ToInt32(temp[0]))
-                    {
-                        order.AddIceCream(tempIceCream);
-                    }
-                }
-            }
-            else if (temp[4] == "Cone")
-            {
-                IceCream tempIceCream = new Cone(temp[4], Convert.ToInt32(temp[5]), Convert.ToBoolean(temp[6]), flavourList, toppingList);
-                foreach (Order order in orderList)
-                {
-                    if (order.Id == Convert.ToInt32(temp[0]))
-                    {
-                        order.AddIceCream(tempIceCream);
-                    }
-                }
-            }
-            else if (temp[4] == "Waffle")
-            {
-                IceCream tempIceCream = new Waffle(temp[4], Convert.ToInt32(temp[5]), temp[7], flavourList, toppingList);
-                foreach (Order order in orderList)
-                {
-                    if (order.Id == Convert.ToInt32(temp[0]))
-                    {
-                        order.AddIceCream(tempIceCream);
-                    }
-                }
-            }
-        }
+        else { break; }
+           
     }
-}
 
-foreach(Order order in orderList)
-{
-    foreach(var iceCream in order.IceCreamList)
-    {
-        Console.WriteLine(iceCream.CalculatePrice());
-    }
+    
 }
-
-void getCustomers(List<Customer> customerList)
-{
-    using (StreamReader sr = new StreamReader("data/customers.csv"))
-    {
-        string? s = sr.ReadLine();
-        if (s != null) { string[] heading =  s.Split(',');}
-        while((s = sr.ReadLine()) != null)
-        {
-            string[] temp = s.Split(",");
-            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
-            tempCard.CheckTierUpgrade();
-            Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), Convert.ToDateTime(temp[2]));
-            tempCustomer.Rewards = tempCard;
-            customerList.Add(tempCustomer);
-        }
-    }
-}
-
+ListAllOrders(customerList);
 // Basic 6 : Clive
 
 
