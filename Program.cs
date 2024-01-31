@@ -271,7 +271,7 @@ void CreateCustomerOrder()
 
     Console.WriteLine($"Order for customer {chosenCustomer.Name} with order ID {newOrder.Id} has been placed in the queue.");
 }
-CreateCustomerOrder();
+// CreateCustomerOrder();
 
 // Basic 5 : Clive
 
