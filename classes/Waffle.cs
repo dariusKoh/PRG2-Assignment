@@ -48,7 +48,6 @@ namespace S10257799G_PRG2Assignment
                 if (Option == array[0] && Scoops == Convert.ToInt32(array[1]) && WaffleFlavour == array[3])
                 {
                     price += Convert.ToDouble(array[4]);
-                    Console.WriteLine(price);  
                     break;
                 }
             }

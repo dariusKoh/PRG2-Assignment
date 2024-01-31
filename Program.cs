@@ -7,6 +7,7 @@ using S10257799G_PRG2Assignment;
 using System.Data;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Transactions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //Utility methods : Clive
@@ -169,6 +170,8 @@ void getOrders(List<Order> orderList, List<Customer> customerList)
 
 List<Order> orderList = new List<Order>();
 List<Customer> customerList = new List<Customer>();
+Queue<Order> goldQueue = new Queue<Order>();
+Queue<Order> normalQueue = new Queue<Order>();
 getCustomers(customerList);
 getOrders(orderList, customerList);
 
@@ -221,6 +224,7 @@ void RegisterNewCustomer()
     {
         sw.WriteLine(writeToFile);
     }
+    Console.WriteLine("Successfully registered new customer.");
 }
 //RegisterNewCustomer();
 //ListAllCustomers();
@@ -271,7 +275,7 @@ void CreateCustomerOrder()
 
     Console.WriteLine($"Order for customer {chosenCustomer.Name} with order ID {newOrder.Id} has been placed in the queue.");
 }
-CreateCustomerOrder();
+//CreateCustomerOrder();
 
 // Basic 5 : Clive
 
@@ -288,63 +292,72 @@ void ListAllOrders(List<Customer> customerList)
             option = Convert.ToInt32(Console.ReadLine());
         }
         catch (FormatException) 
-        { 
-            Console.WriteLine("Invalid input, must be an integer.");  
+        {
+            Console.WriteLine($"Invalid input format, please enter an integer within 1 and {customerList.Count()} inclusive.");
             continue; 
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Exception: {e.ToString()}");
+            continue;
         }
         if (option <= 0 || option > customerList.Count())
         {
-            Console.WriteLine($"Input out of range, please enter an integer within 1 and {customerList.Count()}.");
+            Console.WriteLine($"Input out of range, please enter an integer within 1 and {customerList.Count()} inclusive.");
             continue;
         }
         else { break; } 
     }
     option -= 1;
-    Console.WriteLine(option);
     Customer selectCustomer = customerList[option];
-    //Order currentOrder = selectCustomer.CurrentOrder;
-    Order currentOrder = selectCustomer.OrderHistory[0];
+    Order currentOrder = selectCustomer.CurrentOrder;
     List<Order> orderHistory = selectCustomer.OrderHistory;
 
-    Console.WriteLine($"---------Current Order---------\nId: {currentOrder.Id}\nTime received: {currentOrder.TimeReceived}\n-------------------------------");
-
-    foreach(IceCream iceCream in currentOrder.IceCreamList)
+    if (currentOrder != null)
     {
-        string allFlavours = "";
-        string allToppings = "";
-        foreach(Flavour item in iceCream.Flavours)
+        Console.WriteLine($"---------Current Order---------\nId: {currentOrder.Id}\nTime received: {currentOrder.TimeReceived}\n-------------------------------");
+        foreach (IceCream iceCream in currentOrder.IceCreamList)
         {
-            allFlavours += $"\n{item.ToString()}";
-        }
-        foreach (Topping item in iceCream.Toppings)
-        {
-            allToppings += $"\n{item.ToString()}";
-        }
+            string allFlavours = "";
+            string allToppings = "";
+            foreach (Flavour item in iceCream.Flavours)
+            {
+                allFlavours += $"\n{item.ToString()}";
+            }
+            foreach (Topping item in iceCream.Toppings)
+            {
+                allToppings += $"\n{item.ToString()}";
+            }
 
-        string baseOut = $"Option: {iceCream.Option}\nScoops: {iceCream.Scoops}\n---------\nFlavours\n---------{allFlavours}\n---------\nToppings\n---------{allToppings}\n---------";
+            string baseOut = $"Option: {iceCream.Option}\nScoops: {iceCream.Scoops}\n---------\nFlavours\n---------{allFlavours}\n---------\nToppings\n---------{allToppings}\n---------";
 
-        if (iceCream.Option == "Cup")
-        {
-            Console.WriteLine(baseOut);
-        }
-        else if (iceCream.Option == "Cone")
-        {
-            Cone temp = (Cone)iceCream;
-            baseOut += $"\nDipped: {temp.Dipped}\n---------";
-            Console.WriteLine(baseOut);
-        }
-        else if (iceCream.Option == "Waffle")
-        {
-            Waffle temp = (Waffle)iceCream;
-            baseOut += $"\nWaffle flavour: {temp.WaffleFlavour}\n---------";
-            Console.WriteLine(baseOut);
-        }
+            if (iceCream.Option == "Cup")
+            {
+                Console.WriteLine(baseOut);
+            }
+            else if (iceCream.Option == "Cone")
+            {
+                Cone temp = (Cone)iceCream;
+                baseOut += $"\nDipped: {temp.Dipped}\n---------";
+                Console.WriteLine(baseOut);
+            }
+            else if (iceCream.Option == "Waffle")
+            {
+                Waffle temp = (Waffle)iceCream;
+                baseOut += $"\nWaffle flavour: {temp.WaffleFlavour}\n---------";
+                Console.WriteLine(baseOut);
+            }
 
+        }
+    }
+    else
+    {
+        Console.WriteLine("---------Current Order---------\nThis customer does not have a current order.");
     }
     Console.WriteLine("---------Order History---------");
-    Console.WriteLine(orderHistory.Count);
     foreach(Order order in orderHistory)
     {
+        Console.WriteLine($"Id: {order.Id}\nTime received: {order.TimeReceived}\n-------------------------------");
         foreach (IceCream iceCream in order.IceCreamList)
         {
             string allFlavours = "";
@@ -383,8 +396,361 @@ void ListAllOrders(List<Customer> customerList)
 //ListAllOrders(customerList);
 // Basic 6 : Clive
 
+void ModifyOrder(List<Customer> customerList)
+{
+    ListAllCustomers();
+    int customerOption = 0;
+    while (true)
+    {
+        Console.Write("Enter the index of the customer whose order you want to modify: ");
+        try
+        {
+            customerOption = Convert.ToInt32(Console.ReadLine());
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Invalid input format, please enter an integer within 1 and {customerList.Count()} inclusive.");
+            continue;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Exception: {e.ToString()}");
+            continue;
+        }
+        if (customerOption <= 0 || customerOption > customerList.Count()) 
+        {
+            Console.WriteLine($"Input out of range, please enter an integer within 1 and {customerList.Count()} inclusive.");
+            continue;
+        }
+        else { break; }
+    }
 
+    customerOption -= 1;
+    Customer selectedCustomer = customerList[customerOption];
+    Order currentOrder = selectedCustomer.CurrentOrder;
+
+    /*If function 4 incomplete at time of testing, use these to test the function
+      Order currentOrder = selectedCustomer.OrderHistory[1];
+      selectedCustomer.CurrentOrder = currentOrder;
+    */
+
+    if (currentOrder != null)
+    { 
+        displayCurrentItems(currentOrder);
+
+        int action = 0;
+        while (true)
+        {
+            Console.WriteLine("Options\n---------\n[1] Modify an existing ice cream\n[2] Add new ice cream to order\n[3] Delete an existing ice cream");
+            Console.Write("Enter the option you want to execute: ");
+            try
+            {
+                action = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid input format, please enter an integer within 1 and 3 inclusive.");
+                continue;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception: {e.ToString()}");
+                continue;
+            }
+            if (action < 1 || action > 3)
+            {
+                Console.WriteLine("Input out of range, please enter an integer within 1 and 3 inclusive.");
+                continue;
+            }
+            else { break; }
+        }
+
+        switch (action)
+        {
+            case 1:
+                {
+                    int editOption = 0;
+                    while (true)
+                    {
+                        Console.Write("Enter the index of the ice cream you want to modify: ");
+                        try
+                        {
+                            editOption = Convert.ToInt32(Console.ReadLine());
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine($"Invalid input format, please enter an integer within 1 and {currentOrder.IceCreamList.Count()} inclusive.");
+                            continue;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Exception: {e.ToString()}");
+                            continue;
+                        }
+                        if (editOption <= 0 || editOption > currentOrder.IceCreamList.Count())
+                        {
+                            Console.WriteLine($"Input out of range, please enter an integer within 1 and {currentOrder.IceCreamList.Count()} inclusive.");
+                            continue;
+                        }
+                        else { break; }
+                    }
+                    currentOrder.ModifyIceCream(editOption);
+                    break;
+                }
+            case 2: 
+                { 
+                    currentOrder.AddIceCream(currentOrder.CreateIceCream());
+                    break;
+                }
+            case 3: 
+                {
+                    int length = currentOrder.IceCreamList.Count();
+                    if (length == 1)
+                    {
+                        Console.WriteLine("An order must contain at least 1 ice cream, unable to delete.");
+                        break;
+                    }
+                    else
+                    {
+                        int removeOption = 0;
+                        while (true)
+                        {
+                            Console.Write("Enter the index of the ice cream you want to remove: ");
+                            try
+                            {
+                                removeOption = Convert.ToInt32(Console.ReadLine());
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine($"Invalid input format, please enter an integer within 1 and {currentOrder.IceCreamList.Count()} inclusive.");
+                                continue;
+                            }
+                            if (removeOption <= 0 || removeOption > currentOrder.IceCreamList.Count())
+                            {
+                                Console.WriteLine($"Input out of range, please enter an integer within 1 and {currentOrder.IceCreamList.Count()} inclusive.");
+                                continue;
+                            }
+                            else { break; }
+                        }
+                        currentOrder.RemoveIceCream(removeOption);
+                        break;
+                    }
+                }
+        }
+        displayCurrentItems(currentOrder);
+    }
+    else
+    {
+        Console.WriteLine("This customer does not have a current order.");
+    }
+}
+
+void displayCurrentItems(Order currentOrder)
+{
+    List<IceCream> itemList = currentOrder.IceCreamList;
+    for (int i = 0; i < itemList.Count(); i++)
+    {
+        IceCream iceCream = itemList[i];
+        string allFlavours = "";
+        string allToppings = "";
+        foreach (Flavour item in iceCream.Flavours)
+        {
+            allFlavours += $"\n{item.ToString()}";
+        }
+        foreach (Topping item in iceCream.Toppings)
+        {
+            allToppings += $"\n{item.ToString()}";
+        }
+
+        string baseOut = $"[{i + 1}]\nOption: {iceCream.Option}\nScoops: {iceCream.Scoops}\n---------\nFlavours\n---------{allFlavours}\n---------\nToppings\n---------{allToppings}\n---------";
+
+        if (iceCream.Option == "Cup")
+        {
+            Console.WriteLine(baseOut);
+        }
+        else if (iceCream.Option == "Cone")
+        {
+            Cone temp = (Cone)iceCream;
+            baseOut += $"\nDipped: {temp.Dipped}\n---------";
+            Console.WriteLine(baseOut);
+        }
+        else if (iceCream.Option == "Waffle")
+        {
+            Waffle temp = (Waffle)iceCream;
+            baseOut += $"\nWaffle flavour: {temp.WaffleFlavour}\n---------";
+            Console.WriteLine(baseOut);
+        }
+    }
+}
+//ModifyOrder(customerList);
+
+//Interface - Clive + Darius
+void DisplayInterface()
+{
+    Console.WriteLine("Options\n---------\n[1] List all customers\n[2] List all current orders\n[3] Register a new customer\n[4] Create a customer's order\n[5] Display order details\n[6] Modify order details\n[7] Process order\n[8] Display financial breakdown\n[0] Exit");
+    int option = 0;
+    while (true)
+    {
+        Console.Write("Enter your option: ");
+        try
+        {
+            option = Convert.ToInt32(Console.ReadLine());
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input format, please enter an integer within 0 and 6 inclusive.");
+            continue;
+        }
+        catch (Exception e)
+        { 
+            Console.WriteLine($"Exception: {e.ToString()}");
+            continue;
+        }
+        if (option < 0 || option > 8)
+        {
+            Console.WriteLine("Input out of range, please enter an integer within 0 and 6 inclusive.");
+            continue;
+        }
+        else { break; }
+    }
+
+    switch (option)
+    {
+        case 0:
+            {
+                Console.WriteLine("Exiting program.");
+                break;
+            }
+        case 1:
+            {
+                ListAllCustomers();
+                break;
+            }
+        case 2:
+            {
+                ListCurrentOrders(goldQueue, normalQueue);
+                break;
+            }
+        case 3:
+            {
+                RegisterNewCustomer();
+                break;
+            }
+        case 4:
+            {
+                CreateCustomerOrder();
+                break;
+            }
+        case 5:
+            {
+                ListAllOrders(customerList);
+                break;
+            }
+        case 6:
+            {
+                ModifyOrder(customerList);
+                break;
+            }
+        case 7:
+            {
+                break;
+            }
+        case 8:
+            {
+                DisplayBreakDown();
+                break;
+            }
+        default:
+            {
+                Console.WriteLine("Default case, something went wrong.");
+                break;
+            }
+    }
+    if (option != 0)
+    {
+        DisplayInterface();
+    }
+}
+
+DisplayInterface();
 // Advanced (A) : 
 
 
-// Advanced (B) : 
+// Advanced (B) Clive: 
+void DisplayBreakDown()
+{
+    int year = 0;
+    while (true)
+    {
+        DateTime currentDate = DateTime.Now;
+        Console.Write("Enter the year: ");
+        try
+        {
+            year = Convert.ToInt32(Console.ReadLine());
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine($"Invalid input format, please input an integer (maximum: {currentDate.Year}).");
+            continue;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Exception: {e.ToString()}");
+            continue;
+        }
+        if (year > currentDate.Year)
+        {
+            Console.WriteLine($"Input out of range, please input an integer (maxiumum: {currentDate.Year}).");
+        }
+        else { break; }
+    }
+
+    List<Order> yearOrder = new List<Order>();
+
+    foreach (Order order in orderList) 
+    {
+        DateTime fulfill = Convert.ToDateTime(order.TimeFulfilled);
+        if (fulfill.Year == year)
+        {
+            yearOrder.Add(order);
+        }
+    }
+    yearOrder.Sort();
+
+    int month = 0;
+    List<string> months = new List<string>();
+    List<double> monthTotals = new List<double>();
+
+    for (int i = 0; i<12; i++)
+    {
+        monthTotals.Add(0);
+        DateTime tempDate = new DateTime(2024, i+1, 1);
+        string monthName = tempDate.ToString("MMM");
+        months.Add(monthName);
+    }
+
+    foreach (Order order in yearOrder)
+    {
+        int orderMonth = Convert.ToDateTime(order.TimeFulfilled).Month;
+        if (month == 0)
+        {
+            month = (orderMonth);
+        }
+        else if (orderMonth != month)
+        {
+            month = orderMonth;
+        }
+
+        foreach(IceCream iceCream in order.IceCreamList)
+        {
+            monthTotals[month-1] += iceCream.CalculatePrice();
+        }
+    }
+
+    
+    for (int i = 0; i<monthTotals.Count;i++) 
+    {
+        Console.WriteLine($"{months[i]} {year}{":",-5}${monthTotals[i]:0.00}");
+    }
+    Console.WriteLine($"{"Total",-13}${monthTotals.Sum():0.00}");
+}

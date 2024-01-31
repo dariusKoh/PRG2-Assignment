@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace PRG2_Assignment.classes
 {
-    internal class Order
+    internal class Order : IComparable<Order>
     {
         public int Id { get; set; }
         public DateTime TimeReceived { get; set; }
@@ -146,20 +146,69 @@ namespace PRG2_Assignment.classes
                 else
                     Console.WriteLine("Please enter a valid flavour'.");
             }
+            //Converting any strings to be capitalised
+            //Clive
+            string newoption = Convert.ToString(iceCreamData[0]);
+            var optionArray = newoption.ToCharArray();
+            for (int i = 0; i<1; i++)
+            {
+                optionArray[i] = char.ToUpper(optionArray[i]);
+            }
+            newoption = new string(optionArray);
+
+            for (int f = 0; f < flList.Count(); f++) 
+            { 
+                Flavour fl = flList[f];
+                var flArray = fl.Type.ToCharArray();
+                for (int i = 0; i<1; i++)
+                {
+                    if (fl.Type == "sea salt")
+                    {
+                        flArray[4] = char.ToUpper(flArray[4]);
+                    }
+                    flArray[i] = char.ToUpper(flArray[i]);
+                    string newfl = new string(flArray);
+                    flList[f].Type = newfl;
+                }
+            }
+
+            for (int t = 0; t < tList.Count(); t++)
+            {
+                Topping tp = tList[t];
+                var tArray = tp.Type.ToCharArray();
+                for (int i = 0; i < 1; i++)
+                {
+                    tArray[i] = char.ToUpper(tArray[i]);
+                    string newt = new string(tArray);
+                    tList[t].Type = newt;
+                }
+            }
 
             if ((string)iceCreamData[0] == "cup")
             {
-                IceCream newIceCream = new Cup(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[1]), flList, tList);
+                
+                IceCream newIceCream = new Cup(newoption, Convert.ToInt16(iceCreamData[1]), flList, tList);
                 return newIceCream; 
             }
             else if ((string)iceCreamData[0] == "cone")
             {
-                IceCream newIceCream = new Cone(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), Convert.ToBoolean(iceCreamData[1]), flList, tList);
+                IceCream newIceCream = new Cone(newoption, Convert.ToInt16(iceCreamData[2]), Convert.ToBoolean(iceCreamData[1]), flList, tList);
                 return newIceCream;
             }
             else
             {
-                IceCream newIceCream = new Waffle(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), Convert.ToString(iceCreamData[1]), flList, tList);
+                string wflavour = Convert.ToString(iceCreamData[1]);
+                var warray = wflavour.ToCharArray();
+                for (int i = 0; i<1; i++)
+                {
+                    if (wflavour == "red velvet")
+                    {
+                        warray[4] = char.ToUpper(warray[4]);
+                    }
+                    warray[i] = char.ToUpper(warray[i]);
+                }
+                wflavour = new string(warray);
+                IceCream newIceCream = new Waffle(newoption, Convert.ToInt16(iceCreamData[2]), wflavour, flList, tList);
                 return newIceCream;
             }
         }
@@ -187,6 +236,11 @@ namespace PRG2_Assignment.classes
                 total += i.CalculatePrice();
             }
             return total;
+        }
+
+        public int CompareTo(Order next)
+        {
+            return (Convert.ToDateTime(this.TimeFulfilled)).CompareTo(Convert.ToDateTime(next.TimeFulfilled));
         }
 
         public override string ToString()
