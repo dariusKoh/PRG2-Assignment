@@ -32,6 +32,22 @@ namespace PRG2_Assignment.classes
             IceCreamList = new List<IceCream>();
         }
 
+        public string CapitaliseFirstLetters(string s)
+        {
+            string[] stringList = s.Split(' ');
+
+            for (int i = 0; i < stringList.Count(); i++)
+            {
+                char[] letters = stringList[i].ToCharArray();
+                letters[0] = char.ToUpper(letters[0]);
+
+                stringList[i] = new string(letters);
+            }
+
+            string output = string.Join(" ", stringList);
+            return output;
+        }
+
         public IceCream CreateIceCream()
         {
             List<string> options = new List<string> {"cup", "cone", "waffle"};
@@ -106,7 +122,7 @@ namespace PRG2_Assignment.classes
             int count = 0;
             while (count < 4)
             {
-                Console.Write("Please enter a topping to add (n to cancel): ");
+                Console.Write("Please enter a topping to add ('N' to cancel): ");
                 string tOption = Console.ReadLine().ToLower();
 
                 if (tOption == "n")
@@ -147,8 +163,8 @@ namespace PRG2_Assignment.classes
                 else
                     Console.WriteLine("Please enter a valid flavour.");
             }
+
             //Converting any strings to be capitalised
-            //Clive
             string newoption = Convert.ToString(iceCreamData[0]);
             var optionArray = newoption.ToCharArray();
             for (int i = 0; i<1; i++)

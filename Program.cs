@@ -181,10 +181,6 @@ Queue<Order> normalQueue = new Queue<Order>();
 
 getCustomers(customerList);
 getOrders(orderList, customerList);
-/* Test data for function 2
-goldQueue.Enqueue(orderList[0]);
-goldQueue.Enqueue(orderList[1]);
-*/
 
 // Basic 1 : Darius
 void ListAllCustomers()
@@ -198,7 +194,6 @@ void ListAllCustomers()
         Console.WriteLine($"{i,-4}{customerData[0],-15}{customerData[1],-8}{customerData[2],-12}{customerData[3],-10}{customerData[4],-5}{customerData[5]}");
     }
 }
-//ListAllCustomers();
 
 // Basic 2 : Clive                                                                                                                                                    
 void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
@@ -216,7 +211,6 @@ void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
         displayCurrentItems(item);
     }
 }
-//ListCurrentOrders(goldQueue, normalQueue);
 
 // Basic 3 : Darius
 void RegisterNewCustomer()
@@ -242,7 +236,6 @@ void RegisterNewCustomer()
     }
     
 }
-//RegisterNewCustomer();
 
 // Basic 4 : Darius
 void CreateCustomerOrder()
@@ -266,7 +259,8 @@ void CreateCustomerOrder()
             Console.WriteLine("Please enter a valid customer.");
         }
     }
-    Console.WriteLine(chosenCustomer);
+    Console.WriteLine($"Customer {chosenCustomer.Name} with ID {chosenCustomer.MemberId} has been selected." +
+        $"\nMembership Tier: {chosenCustomer.Rewards.Tier}, Points: {chosenCustomer.Rewards.Points}, PunchCard: {chosenCustomer.Rewards.PunchCard} Punches");
 
     newOrder.AddIceCream(newOrder.CreateIceCream());
     while (true)
@@ -286,7 +280,6 @@ void CreateCustomerOrder()
 
     Console.WriteLine($"Order for customer {chosenCustomer.Name} with order ID {newOrder.Id} has been placed in the queue.");
 }
-//CreateCustomerOrder();
 
 // Basic 5 : Clive
 void ListAllOrders(List<Customer> customerList)
@@ -423,7 +416,6 @@ void ListAllOrders(List<Customer> customerList)
         }
     }
 }
-//ListAllOrders(customerList);
 
 // Basic 6 : Clive
 void ModifyOrder(List<Customer> customerList)
@@ -648,7 +640,6 @@ void displayCurrentItems(Order currentOrder)
         }
     }
 }
-//ModifyOrder(customerList);
 
 //Interface - Clive + Darius
 void DisplayInterface()
@@ -662,8 +653,7 @@ void DisplayInterface()
         "[6] Modify order details\n" +
         "[7] Process order\n" +
         "[8] Display financial breakdown\n" +
-        "[0] Exit\n" +
-        "==========");
+        "[0] Exit\n---------");
     int option = 0;
     while (true)
     {
@@ -754,10 +744,12 @@ DisplayInterface();
 // Advanced (A) : Darius
 void ProcessOrderAndCheckout()
 {
-    List<double> priceList = new List<double>();
     double totalPrice = 0;
+    List<double> priceList = new List<double>();
+
     Order currentOrder = new Order();
-    
+    Customer currentCustomer = new Customer();
+
     try
     {
         if (goldQueue.Count == 0)
@@ -774,7 +766,7 @@ void ProcessOrderAndCheckout()
     foreach (IceCream i in currentOrder.IceCreamList)
     {
         Console.WriteLine($"Ice Cream {currentOrder.IceCreamList.IndexOf(i) + 1}:" +
-            $"\n=========="); // Outputs ice cream number
+            $"\n---------"); // Outputs ice cream number
 
         string option = i.Option;
         if (i.Option == "Cone")
@@ -799,16 +791,16 @@ void ProcessOrderAndCheckout()
         if (i.Toppings.Count == 0)
             toppings += "  "; // So the substring does not crash the program
 
-        Console.WriteLine($"Option: {option} \nScoops: {i.Scoops} " +
+        Console.WriteLine($"Option: {option} " +
+            $"\nScoops: {i.Scoops} " +
             $"\nFlavours: {flavours.Substring(0, flavours.Length - 2)}" +
             $"\nToppings: {toppings.Substring(0, toppings.Length - 2)}" +
             $"\nPrice: {i.CalculatePrice():C}" +
-            $"\n==========");
+            $"\n---------");
 
         priceList.Add(i.CalculatePrice());
     }
 
-    Customer currentCustomer = new Customer();
     foreach (Customer j in customerList)
     {
         if (j.CurrentOrder == currentOrder)
@@ -822,20 +814,26 @@ void ProcessOrderAndCheckout()
         $"\nPoints: {currentCustomer.Rewards.Points}" +
         $"\nTotal Bill : {priceList.Sum()}");
 
+    /* IceCreamList is cloned here in the event that both the punchcard and birthday is activated.
+       This event may mess up the Ice Cream numbers displayed previously. */
+    List<IceCream> tempIceCreamList = new List<IceCream>(currentOrder.IceCreamList);
+    bool freeIceCream = false;
     if (currentCustomer.Rewards.PunchCard + currentOrder.IceCreamList.Count > 10)
     {
+        Console.WriteLine($"Your punchcard has been filled up! Ice Cream 1 from your order is now free!");
         priceList.RemoveAt(0);
-        Console.WriteLine($"Your punchcard has been filled up! Ice Cream 1 from your order is now free! \n" +
-            $"New Total Bill : {priceList.Sum()}");
+        freeIceCream = true;
     }
 
     if (currentCustomer.IsBirthday())
     {
-        Console.WriteLine($"Happy Birthday! Ice Cream {priceList.IndexOf(priceList.Max()) + 1} from your order is now free!");
+        Console.WriteLine($"Happy Birthday! Ice Cream {tempIceCreamList.IndexOf(tempIceCreamList[priceList.IndexOf(priceList.Max())]) + 1} from your order is now free!");
         priceList.RemoveAt(priceList.IndexOf(priceList.Max()));
-        
-        Console.WriteLine($"New Total Bill : {priceList.Sum()}");
+        freeIceCream = true;
     }
+
+    if (freeIceCream)
+        Console.WriteLine($"New Total Bill : {priceList.Sum()}");
 
     totalPrice = priceList.Sum();
     if (currentCustomer.Rewards.Tier != "Ordinary" && currentCustomer.Rewards.Points > 0 && priceList.Sum() > 0)
@@ -845,16 +843,33 @@ void ProcessOrderAndCheckout()
 
         if (pointsUsed != 0)
         {
-            currentCustomer.Rewards.RedeemPoints(pointsUsed);
-            totalPrice -= pointsUsed * 0.02;
+            // Prevent user from spending more points than possible, as a negative discount would be bad for business.
+            if (pointsUsed * 0.02 < totalPrice)
+            {
+                currentCustomer.Rewards.RedeemPoints(pointsUsed);
+                totalPrice -= pointsUsed * 0.02;
 
-            Console.WriteLine($"{pointsUsed} points have been redeemed for a ${pointsUsed * 0.02:C} discount.");
+                Console.WriteLine($"{pointsUsed} points have been redeemed for a {pointsUsed * 0.02:C} discount.");
+            }
+            else
+            {
+                /*  x = 0.02y
+                    x = y/50
+                    therefore, y = 50x */
+                int maxPointsUsed = Convert.ToInt32(Math.Floor(totalPrice)) * 50;
+
+                currentCustomer.Rewards.RedeemPoints(maxPointsUsed);
+                totalPrice -= maxPointsUsed * 0.02;
+
+                Console.WriteLine($"{pointsUsed} points has been reduced to {maxPointsUsed} points, for a full discount of $0.00 paid.\n" +
+                    $"This is due to {pointsUsed} being over the maximum discount of $0.00.");
+            }
         }
     }
 
-    Console.WriteLine($"Final Bill {totalPrice}");
-    Console.Write("Please press any key to make payment.");
-    Console.ReadLine();
+    Console.WriteLine($"Final Bill : {totalPrice:C}");
+    Console.Write("Please press any key to make payment. ");
+    Console.ReadLine(); // So the press any key works
 
     for (int i = 0; i < currentOrder.IceCreamList.Count; i++)
         currentCustomer.Rewards.Punch();
