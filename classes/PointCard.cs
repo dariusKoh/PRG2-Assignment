@@ -41,7 +41,7 @@ namespace PRG2_Assignment.classes
             }
         }
 
-        public void AddPoints(int amount)
+        public void AddPoints(double amount)
         {
             int pointsConverted = Convert.ToInt32(Math.Floor(amount * 0.72));
             Points += pointsConverted;
@@ -49,27 +49,15 @@ namespace PRG2_Assignment.classes
 
         public void RedeemPoints(int amount)
         {
-            if (Tier == "Ordinary")
-            {
-                Console.WriteLine("Only silver and gold members can redeem their points.");
-            }
-
-            else
-            {
-                Points -= amount;
-            }
+            Points -= amount;        
         }
 
-        public void Punch(int points)
+        public void Punch()
         {
             if (PunchCard < 10)
-            {
                 PunchCard++;
-            }
             else
-            {
                 PunchCard = 0;
-            }
         }
 
         public override string ToString()

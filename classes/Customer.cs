@@ -43,8 +43,9 @@ namespace PRG2_Assignment.classes
 
         public bool IsBirthday()
         {
-            if (DoB == DateTime.Today)
-                return true;
+            if (DoB.Day == DateTime.Today.Day)
+                if (DoB.Month == DateTime.Today.Month)
+                    return true;
             return false;
         }
 
