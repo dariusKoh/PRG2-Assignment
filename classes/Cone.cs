@@ -26,7 +26,7 @@ namespace S10257799G_PRG2Assignment
         {
             Dipped = _dipped;
         }
-
+        //Function to read options.csv and get ice cream pricing based on scoops and if the cone is dipped
         public void getPrices()
         {
             using (StreamReader sr = new StreamReader("data/options.csv"))
@@ -45,17 +45,16 @@ namespace S10257799G_PRG2Assignment
             getPrices();
             //Calculate how much is owed for toppings
             double price = (1 * Toppings.Count());
-            //Match the price of scoops to the quantity
-            //Check if the cone is dipped and adjust the price if so
             foreach (string[] array in Prices) 
-            { 
+            {
+                //Check if the current array options match the options of the order and set the price accordingly
                 if (Option == array[0] && Scoops == Convert.ToInt32(array[1]) && Convert.ToBoolean(array[2]) == Dipped)
                 {
                     price += Convert.ToDouble(array[4]);
                     break;
                 }
             }
-            //Check the number of premium scoops and add it to the price
+            //Iterate through flavour list and add 2 dollars if the flavour is premium
             foreach (Flavour item in Flavours)
             {
                 if (item.Premium == true)

@@ -23,6 +23,7 @@ namespace S10257799G_PRG2Assignment
         //Lists to store objects of other classes
         public List<Flavour> Flavours { get; set; }
         public List<Topping> Toppings { get; set; }
+        //List to store arrays containing pricing of ice cream combinations
         public List<string[]> Prices = new List<string[]>();
 
         public IceCream() { }
