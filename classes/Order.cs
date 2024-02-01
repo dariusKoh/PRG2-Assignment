@@ -129,22 +129,23 @@ namespace PRG2_Assignment.classes
 
             while (count < scoops)
             {
+                string flavourString = flavours[0];
+                foreach (string s in flavours)
+                    flavourString = flavourString + $", {s}";
+
                 Console.Write("Please enter an ice cream flavour: ");
                 string fOption = Console.ReadLine().ToLower();
 
                 if (flavours.Contains(fOption))
                 {
                     if (flavours.IndexOf(fOption) > 2)
-                    {
-                        flList.Add(new Flavour(fOption, true));
-                        
-                    }
+                        flList.Add(new Flavour(fOption, true));    
                     else
                         flList.Add(new Flavour(fOption, false));
                     count++;
                 }
                 else
-                    Console.WriteLine("Please enter a valid flavour'.");
+                    Console.WriteLine("Please enter a valid flavour.");
             }
 
             if ((string)iceCreamData[0] == "cup")
