@@ -39,8 +39,11 @@ void getCustomers(List<Customer> customerList)
         while ((s = sr.ReadLine()) != null)
         {
             string[] temp = s.Split(",");
+            // Makes sure the format is in dd/MM/yyyy to prevent issues
+            DateTime DoB = DateTime.ParseExact(temp[2], "dd/MM/yyyy", null);
+
             PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
-            Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), Convert.ToDateTime(temp[2]));
+            Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), DoB);
 
             // Fetches and updates tier
             tempCard.Tier = temp[3];
@@ -227,23 +230,26 @@ void RegisterNewCustomer()
         // Make sure the user enters all the data in the correct format
         try
         {
-            Console.Write("Enter customer information in the following format (name;id number;date of birth): ");
+            Console.Write("Enter customer information in the following format (name;id number;date of birth). \n" +
+                "Date of birth shold be in the format (dd/mm/yyyy): ");
             string[] newCustomerInfo = Console.ReadLine().Split(';');
+            // Makes sure the format is in dd/MM/yyyy to prevent issues
+            DateTime DoB = DateTime.ParseExact(newCustomerInfo[2], "dd/MM/yyyy", null);
 
-            Customer newCustomer = new Customer(newCustomerInfo[0], Convert.ToInt32(newCustomerInfo[1]), Convert.ToDateTime(newCustomerInfo[2]));
+            Customer newCustomer = new Customer(newCustomerInfo[0], Convert.ToInt32(newCustomerInfo[1]), DoB);
             PointCard newPointCard = new PointCard(0, 0); // new pointcard with 0 points and punches
             newCustomer.Rewards = newPointCard; // assign pointcard to created customer
 
-            // Append to file, \n is required so that the name isn't appended behind the previous customer's DoB
+            // Append to file, write and \r\n is required so that the name isn't appended behind the previous customer's PointCard info
             using (StreamWriter sw = new StreamWriter("data/customers.csv", true)) 
             { 
-                sw.WriteLine($"\n{newCustomer.Name},{newCustomer.MemberId},{newCustomer.DoB.ToString("MM/dd/yyyy")},{newPointCard.Tier},{newPointCard.Points},{newPointCard.PunchCard}"); 
+                sw.Write($"\r\n{newCustomer.Name},{newCustomer.MemberId},{newCustomer.DoB.ToString("dd/MM/yyyy")},{newPointCard.Tier},{newPointCard.Points},{newPointCard.PunchCard}"); 
             }
             break;
         }
         catch (Exception ex) { Console.WriteLine("Please enter customer information following the format of: (name;id number;date of birth)."); }
     }
-    
+    ListAllCustomers();
 }
 
 // Basic 4 : Darius
@@ -270,7 +276,7 @@ void CreateCustomerOrder()
         try
         {
             Console.Write("Please select a customer from the list: ");
-            int chosenCustomerNum = Convert.ToInt16(Console.ReadLine());
+            int chosenCustomerNum = Convert.ToInt32(Console.ReadLine());
 
             chosenCustomer = customerList[chosenCustomerNum - 1];
             break;
