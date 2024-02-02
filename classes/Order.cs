@@ -32,44 +32,55 @@ namespace PRG2_Assignment.classes
             IceCreamList = new List<IceCream>();
         }
 
+        // Capitalises the first letters of a string
         public string CapitaliseFirstLetters(string s)
         {
-            string[] stringList = s.Split(' ');
+            string[] stringList = s.Split(' '); // Splits the string up if there are multiple words to capitalise
 
             for (int i = 0; i < stringList.Count(); i++)
             {
-                char[] letters = stringList[i].ToCharArray();
-                letters[0] = char.ToUpper(letters[0]);
+                // Creates an array of char, as we are unable to change the first character of a string like in python
+                char[] letters = stringList[i].ToCharArray(); 
+                letters[0] = char.ToUpper(letters[0]); // Changes the first letter of the string to UpperCase
 
                 stringList[i] = new string(letters);
             }
 
-            return string.Join(" ", stringList);
+            return string.Join(" ", stringList); // Joins the stringlist together, adding a space between each word if necessary
         }
 
         public IceCream CreateIceCream()
         {
+            // Lists for data validation
             List<string> options = new List<string> {"cup", "cone", "waffle"};
             List<string> wFList = new List<string> { "original", "red velvet", "charcoal", "pandan" };
             List<string> flavours = new List<string> { "vanilla", "chocolate", "strawberry", "durian", "ube", "sea salt" };
             List<string> toppings = new List<string> { "sprinkles", "mochi", "sago", "oreos" };
+
+            // Lists and variables to store user data
             List<Flavour> flList = new List<Flavour>();
             List<Topping> tList = new List<Topping>();
             List<object> iceCreamData = new List<object>();
+            int scoops = 0;
 
+            // Gets user's ice cream option between cup/cone/waffle
             while (true)
             {
                 Console.Write("Please enter the option for your ice cream: ");
                 string option = Console.ReadLine().ToLower();
+
+                // Checks if the option selected is available
                 if (options.Contains(option))
                 {
                     iceCreamData.Add(option);
 
+                    // Prompts user if they want their cone dipped
                     if (option.ToLower() == "cone")
                     {
-                        Console.Write("Do you want your cone to be a Chocolate-dipped cone? (y/n): ");
+                        Console.Write("Do you want your cone to be a Chocolate-dipped cone? (Y/N): ");
                         string dip = Console.ReadLine().ToLower();
 
+                        // Creates an array with all available options and checks if the user input is in the array
                         if (new[] { "y", "n" }.Contains(dip))
                         {
                             if (dip == "y")
@@ -79,9 +90,10 @@ namespace PRG2_Assignment.classes
                             break;
                         }
                         else
-                            Console.WriteLine("Please enter either 'y' or 'n'.");
+                            Console.WriteLine("Please enter either 'Y' or 'N'.");
                     }
 
+                    // Gets waffle flavour
                     else if (option == "waffle")
                     {
                         Console.Write("Which flavour of waffle would you like? (1. Original, 2. Red Velvet, 3. Charcoal, 4. Pandan): ");
@@ -89,6 +101,7 @@ namespace PRG2_Assignment.classes
                         {
                             int fOption = Convert.ToInt32(Console.ReadLine());
 
+                            // Creates an array with all available options and checks if the user input is in the array
                             if (new[] { 1, 2, 3, 4 }.Contains(fOption))
                             {
                                 iceCreamData.Add(wFList[fOption - 1]);
@@ -104,12 +117,14 @@ namespace PRG2_Assignment.classes
                 else { Console.WriteLine("Please give a valid option between 'Cup', 'Cone' or 'Waffle'."); }
             }
 
+            // Gets and validates number of scoops
             while (true)
             {
                 Console.Write("Please enter the number of scoops: ");
                 string sOption = Console.ReadLine();
 
-                if (new[] { "1", "2", "3" }.Contains(sOption))
+                // Creates an array with all available options and checks if the user input is in the array
+                if (new[] { "1", "2", "3" }.Contains(sOption)) 
                 {
                     iceCreamData.Add(Convert.ToInt32(sOption));
                     break;
@@ -118,6 +133,7 @@ namespace PRG2_Assignment.classes
                     Console.WriteLine("Please enter a number between 1-3");
             }
 
+            // Gets a maximum of 4 toppings before exiting the loop
             int count = 0;
             while (count < 4)
             {
@@ -135,15 +151,17 @@ namespace PRG2_Assignment.classes
                     Console.WriteLine("Please enter a valid topping between 'Sprinkles', 'Mochi', 'Sago' and 'Oreos'.");
             }
 
-            count = 0;
-            int scoops = 0;
+            // Gets number of scoops according to type
             if ((string)iceCreamData[0] == "cup")
                 scoops = Convert.ToInt16(iceCreamData[1]);
             else
                 scoops = Convert.ToInt16(iceCreamData[2]);
 
+            // Gets 3 ice cream flavours according to number of scoops
+            count = 0;
             while (count < scoops)
             {
+                // Used to output all available flavours if user keys in an unavailable flavour
                 string flavourString = flavours[0];
                 foreach (string s in flavours)
                     flavourString = flavourString + $", {s}";
@@ -151,6 +169,7 @@ namespace PRG2_Assignment.classes
                 Console.Write("Please enter an ice cream flavour: ");
                 string fOption = Console.ReadLine().ToLower();
 
+                // Checks if the flavour is valid
                 if (flavours.Contains(fOption))
                 {
                     fOption = CapitaliseFirstLetters(fOption);
@@ -161,14 +180,15 @@ namespace PRG2_Assignment.classes
                     count++;
                 }
                 else
-                    Console.WriteLine("Please enter a valid flavour.");
+                    Console.WriteLine("Please enter a valid flavour. \n" +
+                        $"Available flavours: {flavourString.Substring(0,flavourString.Length - 2)}");
             }
 
-            iceCreamData[0] = CapitaliseFirstLetters((string)iceCreamData[0]);
+            iceCreamData[0] = CapitaliseFirstLetters((string)iceCreamData[0]); // Formats all data to have first letter capitalised
 
+            // Creates respective object and returns the ice cream with all data filled
             if ((string)iceCreamData[0] == "Cup")
             {
-
                 IceCream newIceCream = new Cup(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[1]), flList, tList);
                 return newIceCream;
             }
@@ -184,16 +204,20 @@ namespace PRG2_Assignment.classes
             }
         }
 
+        // adds ice cream to list
         public void AddIceCream(IceCream iceCream)
         {
             IceCreamList.Add(iceCream);
         }
 
+        // deletes ice cream from list
         public void RemoveIceCream(int n)
         {
             IceCream modifyIceCream = IceCreamList[n - 1];
             IceCreamList.RemoveAt(n - 1);
         }
+
+        // Calls create ice cream to get user input to modify their ice cream.
         public void ModifyIceCream(int n)
         {
             IceCreamList[n - 1] = CreateIceCream();

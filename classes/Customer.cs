@@ -33,14 +33,16 @@ namespace PRG2_Assignment.classes
             OrderHistory = new List<Order>();
         }
 
+        // Creates order with current time
         public Order MakeOrder()
         {
             string orderId = Convert.ToString(MemberId) + Convert.ToString(OrderHistory.Count);
 
-            Order newOrder = new Order(Convert.ToInt32(orderId) ,DateTime.Now);
-            return newOrder;
+            Order newOrder = new Order(Convert.ToInt32(orderId), DateTime.Now);
+            return newOrder; 
         }
 
+        // Checks if the current month and date matches the customer's birthday
         public bool IsBirthday()
         {
             if (DoB.Day == DateTime.Today.Day)
@@ -57,7 +59,6 @@ namespace PRG2_Assignment.classes
             {
                 orderHistoryOut += $"\n\n{i.ToString()}";
             }*/
-
             return $"Name: {Name}, Member Id: {MemberId}, DoB: {DoB}, Current Order: {CurrentOrder}\nRewards: {Rewards}\n";
         }
     }

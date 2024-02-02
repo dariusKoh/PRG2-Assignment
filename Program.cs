@@ -42,6 +42,7 @@ void getCustomers(List<Customer> customerList)
             PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
             Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), Convert.ToDateTime(temp[2]));
 
+            // Fetches and updates tier
             tempCard.Tier = temp[3];
             tempCard.CheckTierUpgrade();
             
@@ -174,7 +175,9 @@ void getOrders(List<Order> orderList, List<Customer> customerList)
     }
 }
 
+// General Global Setup
 List<Order> orderList = new List<Order>();
+List<Order> unfulfilledOrdersList = new List<Order>();
 List<Customer> customerList = new List<Customer>();
 Queue<Order> goldQueue = new Queue<Order>();
 Queue<Order> normalQueue = new Queue<Order>();
@@ -186,11 +189,15 @@ getOrders(orderList, customerList);
 void ListAllCustomers()
 {
     string[] customers = File.ReadAllLines("data/customers.csv");
-    for (int i = 1; i < customers.Length; i++)//foreach (string i in customers)
+
+    // Loop through customers.csv and format the data
+    for (int i = 1; i < customers.Length; i++)
     {
         if (customers[i] == "Name,MemberId,DOB,MembershipStatus,MembershipPoints,PunchCard")
             continue;
         string[] customerData = customers[i].Split(',');
+
+        // Formatting and displaying
         Console.WriteLine($"{i,-4}{customerData[0],-15}{customerData[1],-8}{customerData[2],-12}{customerData[3],-10}{customerData[4],-5}{customerData[5]}");
     }
 }
@@ -215,21 +222,23 @@ void ListCurrentOrders(Queue<Order>goldQueue, Queue<Order>normalQueue)
 // Basic 3 : Darius
 void RegisterNewCustomer()
 {
-    while (true)
+    while (true) // While loop for data validation
     {
+        // Make sure the user enters all the data in the correct format
         try
         {
             Console.Write("Enter customer information in the following format (name;id number;date of birth): ");
             string[] newCustomerInfo = Console.ReadLine().Split(';');
 
             Customer newCustomer = new Customer(newCustomerInfo[0], Convert.ToInt32(newCustomerInfo[1]), Convert.ToDateTime(newCustomerInfo[2]));
-            PointCard newPointCard = new PointCard(0, 0);
+            PointCard newPointCard = new PointCard(0, 0); // new pointcard with 0 points and punches
+            newCustomer.Rewards = newPointCard; // assign pointcard to created customer
 
-            newCustomer.Rewards = newPointCard;
-
-            string writeToFile = $"{newCustomer.Name},{newCustomer.MemberId},{newCustomer.DoB.ToString("MM/dd/yyyy")},{newPointCard.Tier},{newPointCard.Points},{newPointCard.PunchCard}";
-
-            using (StreamWriter sw = new StreamWriter("data/customers.csv", true)) { sw.WriteLine(writeToFile); }
+            // Append to file, \n is required so that the name isn't appended behind the previous customer's DoB
+            using (StreamWriter sw = new StreamWriter("data/customers.csv", true)) 
+            { 
+                sw.WriteLine($"\n{newCustomer.Name},{newCustomer.MemberId},{newCustomer.DoB.ToString("MM/dd/yyyy")},{newPointCard.Tier},{newPointCard.Points},{newPointCard.PunchCard}"); 
+            }
             break;
         }
         catch (Exception ex) { Console.WriteLine("Please enter customer information following the format of: (name;id number;date of birth)."); }
@@ -240,10 +249,22 @@ void RegisterNewCustomer()
 // Basic 4 : Darius
 void CreateCustomerOrder()
 {
+    // Display all customers so we know who to select
     ListAllCustomers();
     Customer chosenCustomer = new Customer();
-    Order newOrder = new Order(orderList[orderList.Count - 1].Id + 1, DateTime.Now);
+    Order newOrder = new Order();
 
+    if (unfulfilledOrdersList.Count == 0)
+    {
+        newOrder = new Order(orderList[orderList.Count - 1].Id + 1, DateTime.Now);
+    }
+    else
+    {
+        newOrder = new Order(unfulfilledOrdersList[unfulfilledOrdersList.Count - 1].Id + 1, DateTime.Now);
+    }
+        
+
+    // Data validation for customer
     while (true)
     {
         try
@@ -262,6 +283,7 @@ void CreateCustomerOrder()
     Console.WriteLine($"Customer {chosenCustomer.Name} with ID {chosenCustomer.MemberId} has been selected." +
         $"\nMembership Tier: {chosenCustomer.Rewards.Tier}, Points: {chosenCustomer.Rewards.Points}, PunchCard: {chosenCustomer.Rewards.PunchCard} Punches");
 
+    // Creates a new ice cream before looping to allow the user to add as many ice creams as they like, then finally appending it to the user's currentorder
     newOrder.AddIceCream(newOrder.CreateIceCream());
     while (true)
     {
@@ -274,10 +296,12 @@ void CreateCustomerOrder()
     }
     chosenCustomer.CurrentOrder = newOrder;
 
+    // Checks tier and enqueues to the currect queue
     if (chosenCustomer.Rewards.Tier == "Gold")
         goldQueue.Enqueue(newOrder);
     else
-        normalQueue.Enqueue(newOrder);   
+        normalQueue.Enqueue(newOrder);
+    unfulfilledOrdersList.Add(newOrder); // Adds to orderList
 
     Console.WriteLine($"Order for customer {chosenCustomer.Name} with order ID {newOrder.Id} has been placed in the queue.");
 }
@@ -598,7 +622,6 @@ void ModifyOrder(List<Customer> customerList)
 //Function to display current order
 void displayCurrentItems(Order currentOrder)
 {   
-    
     List<IceCream> itemList = currentOrder.IceCreamList;
     for (int i = 0; i < itemList.Count(); i++)
     {
@@ -624,12 +647,10 @@ void displayCurrentItems(Order currentOrder)
             $"\n---------";
 
         if (iceCream.Option == "Cup")
-        {
             Console.WriteLine(baseOut);
-        }
         else if (iceCream.Option == "Cone")
         {
-            Cone temp = (Cone)iceCream;
+            Cone temp = (Cone)iceCream; 
             baseOut += $"\nDipped: {temp.Dipped}\n---------";
             Console.WriteLine(baseOut);
         }
@@ -655,14 +676,16 @@ void DisplayInterface()
         "[7] Process order\n" +
         "[8] Display financial breakdown\n" +
         "[0] Exit\n---------");
+
+    // Fetch data from CSV files
+    getCustomers(customerList);
+
     int option = 0;
     while (true)
     {
+        // Filters options and validates the data
         Console.Write("Enter your option: ");
-        try
-        {
-            option = Convert.ToInt32(Console.ReadLine());
-        }
+        try { option = Convert.ToInt32(Console.ReadLine()); }
         //Check if input in correct format, output error and restart loop if not
         catch (FormatException)
         {
@@ -682,6 +705,7 @@ void DisplayInterface()
         else { break; }
     }
 
+    // Switch case for each option available.
     switch (option)
     {
         case 0:
@@ -735,10 +759,10 @@ void DisplayInterface()
                 break;
             }
     }
-    if (option != 0)
-    {
+
+    // If user does not choose to exit the program, display the UI
+    if (option != 0) 
         DisplayInterface();
-    }
 }
 
 DisplayInterface();
@@ -751,6 +775,7 @@ void ProcessOrderAndCheckout()
     Order currentOrder = new Order();
     Customer currentCustomer = new Customer();
 
+    // Data validation and check queues
     try
     {
         if (goldQueue.Count == 0)
@@ -764,20 +789,23 @@ void ProcessOrderAndCheckout()
         return; // Returns user back to main UI
     }
 
-    foreach (Customer j in customerList)
+    // Get the customer that created the order
+    foreach (Customer i in customerList)
     {
-        if (j.CurrentOrder == currentOrder)
+        if (i.CurrentOrder == currentOrder)
         {
-            currentCustomer = j;
+            currentCustomer = i;
             break;
         }
     }
 
     foreach (IceCream i in currentOrder.IceCreamList)
     {
-        Console.WriteLine($"Ice Cream {currentOrder.IceCreamList.IndexOf(i) + 1}:" +
+        Console.WriteLine($"Customer: {currentCustomer.Name}, MemberId: {currentCustomer.MemberId}" +
+            $"\nIce Cream {currentOrder.IceCreamList.IndexOf(i) + 1}:" +
             $"\n---------"); // Outputs ice cream number
 
+        // Format ice cream type
         string option = i.Option;
         if (i.Option == "Cone")
         {
@@ -799,8 +827,9 @@ void ProcessOrderAndCheckout()
         foreach (Topping k in i.Toppings)
             toppings += $"{k.Type}, ";   
         if (i.Toppings.Count == 0)
-            toppings += "  "; // So the substring does not crash the program
+            toppings = "No added toppings.  "; // Empty spaces added so the substring does not crash the program
 
+        // Substrings to remove the comma for the lists
         Console.WriteLine($"Option: {option} " +
             $"\nScoops: {i.Scoops} " +
             $"\nFlavours: {flavours.Substring(0, flavours.Length - 2)}" +
@@ -817,7 +846,7 @@ void ProcessOrderAndCheckout()
         $"Total Bill : {priceList.Sum():C}" +
         $"\n---------");
 
-    /* freeIceCream is used to detect if a free ice cream is given to the user, so that the discounted bill is only displayed once. */
+    // Check for free ice creams
     bool freeIceCream = false;
     if (currentCustomer.Rewards.PunchCard + currentOrder.IceCreamList.Count > 10)
     {
@@ -831,21 +860,19 @@ void ProcessOrderAndCheckout()
         foreach (IceCream i in currentOrder.IceCreamList)
         {
             if (i.CalculatePrice() == priceList.Max())
-            {
                 Console.WriteLine($"Happy Birthday! Ice Cream {currentOrder.IceCreamList.IndexOf(i) + 1} from your order is now free!");
-            }
         }
-
-        //Console.WriteLine($"Happy Birthday! Ice Cream {currentOrder.IceCreamList.IndexOf(priceList[priceList.IndexOf(priceList.Max())]) + 1} from your order is now free!");
         priceList.RemoveAt(priceList.IndexOf(priceList.Max()));
         freeIceCream = true;
     }
 
+    /* freeIceCream is used to detect if a free ice cream is given to the user, so that the discounted bill is only displayed once. */
     if (freeIceCream)
         Console.WriteLine($"---------\n" +
             $"New Total Bill : {priceList.Sum():C}\n" +
             $"---------");
 
+    // Allow the user to use points to offset cost if they are elligible
     totalPrice = priceList.Sum();
     if (currentCustomer.Rewards.Tier != "Ordinary" && currentCustomer.Rewards.Points > 0 && priceList.Sum() > 0)
     {
@@ -857,13 +884,14 @@ void ProcessOrderAndCheckout()
                 Console.Write("How many points would you like to redeem? : ");
                 pointsUsed = Convert.ToInt32(Console.ReadLine());
             }
-            catch (Exception e) { Console.WriteLine("Please enter an integer."); }
+            catch (Exception e) { Console.WriteLine("Please enter a valid number of points (integer)."); }
             
             if (pointsUsed != 0)
             {
+                // Check if the user has enough points
                 if (currentCustomer.Rewards.Points >= pointsUsed)
                 {
-                    // Prevent user from spending more points than possible, as a negative discount would be bad for business.
+                    // Prevent user from spending more points than possible, as a negative final cost would be bad for business.
                     if (pointsUsed * 0.02 < totalPrice)
                     {
                         currentCustomer.Rewards.RedeemPoints(pointsUsed);
@@ -901,7 +929,7 @@ void ProcessOrderAndCheckout()
     for (int i = 0; i < currentOrder.IceCreamList.Count; i++)
         currentCustomer.Rewards.Punch();
 
-    int pointsBeforeEarn = currentCustomer.Rewards.Points;
+    int pointsBeforeEarn = currentCustomer.Rewards.Points; // To display points earned
     currentCustomer.Rewards.AddPoints(priceList.Sum());
     currentCustomer.Rewards.CheckTierUpgrade();
 
@@ -912,7 +940,8 @@ void ProcessOrderAndCheckout()
 
     currentOrder.TimeFulfilled = DateTime.Now;
     currentCustomer.OrderHistory.Add(currentOrder);
-    currentCustomer.CurrentOrder = new Order();
+    orderList.Add(currentOrder);
+    currentCustomer.CurrentOrder = new Order(); // Clears order from customer's current order
 }
 
 // Advanced (B) Clive: 

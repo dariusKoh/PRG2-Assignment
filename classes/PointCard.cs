@@ -28,6 +28,7 @@ namespace PRG2_Assignment.classes
             Tier = "Ordinary";
         }
 
+        // Checks if a tier upgrade is available, and upgrades the customer's tier if so
         public void CheckTierUpgrade()
         {
             if (Tier == "Ordinary" && Points >= 50)
@@ -41,17 +42,24 @@ namespace PRG2_Assignment.classes
             }
         }
 
+        // Adds points to the customer's account after a purchase
         public void AddPoints(double amount)
         {
             int pointsConverted = Convert.ToInt32(Math.Floor(amount * 0.72));
             Points += pointsConverted;
         }
 
+        // Deducts points from customer when points are used
         public void RedeemPoints(int amount)
         {
-            Points -= amount;        
+            // Checks if customer has enough points
+            if (amount > Points)
+                Console.WriteLine($"You do not have that many points!\nCurrent Points: {Points}");
+            else
+                Points -= amount;        
         }
 
+        // Punches card and resets card
         public void Punch()
         {
             if (PunchCard < 10)
