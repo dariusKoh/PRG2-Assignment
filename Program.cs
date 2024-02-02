@@ -37,7 +37,6 @@ void getCustomers(List<Customer> customerList)
         string? s = sr.ReadLine();
         if (s != null) { string[] heading = s.Split(','); }
 
-        int listLength = 0;
         while ((s = sr.ReadLine()) != null)
         {
             string[] temp = s.Split(",");
@@ -46,17 +45,12 @@ void getCustomers(List<Customer> customerList)
             Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), DoB);
             PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
 
-            // Prevents appending the same customer data.
-            if (listLength >= customerList.Count)
-            {
-                // Fetches and updates tier
-                tempCard.Tier = temp[3];
-                tempCard.CheckTierUpgrade();
+            // Fetches and updates tier
+            tempCard.Tier = temp[3];
+            tempCard.CheckTierUpgrade();
 
-                tempCustomer.Rewards = tempCard;
-                customerList.Add(tempCustomer);
-                listLength++;
-            }
+            tempCustomer.Rewards = tempCard;
+            customerList.Add(tempCustomer);
         }
     }
 }
@@ -246,6 +240,7 @@ void RegisterNewCustomer()
             PointCard newPointCard = new PointCard(0, 0); // new pointcard with 0 points and punches
             newCustomer.Rewards = newPointCard; // assign pointcard to created customer
 
+            customerList.Add(newCustomer);
             // Append to file, write and \r\n is required so that the name isn't appended behind the previous customer's PointCard info
             using (StreamWriter sw = new StreamWriter("data/customers.csv", true)) 
             { 
@@ -689,9 +684,6 @@ void DisplayInterface()
         "[8] Display financial breakdown\n" +
         "[0] Exit\n---------");
 
-    // Fetch data from CSV files
-    getCustomers(customerList);
-
     int option = 0;
     while (true)
     {
@@ -811,10 +803,11 @@ void ProcessOrderAndCheckout()
         }
     }
 
+    Console.WriteLine($"Customer: {currentCustomer.Name}, Member Id: {currentCustomer.MemberId}");
     foreach (IceCream i in currentOrder.IceCreamList)
     {
-        Console.WriteLine($"Customer: {currentCustomer.Name}, MemberId: {currentCustomer.MemberId}" +
-            $"\nIce Cream {currentOrder.IceCreamList.IndexOf(i) + 1}:" +
+        Console.WriteLine($"---------" +
+            $"\nIce Cream {currentOrder.IceCreamList.IndexOf(i) + 1}" +
             $"\n---------"); // Outputs ice cream number
 
         // Format ice cream type
@@ -928,7 +921,7 @@ void ProcessOrderAndCheckout()
                 }
                 Console.WriteLine($"You do not have that many points!\nCurrent Points: {currentCustomer.Rewards.Points}");
             }
-            break;
+            else break;
         }
     }
 

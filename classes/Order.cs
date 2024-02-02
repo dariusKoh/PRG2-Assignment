@@ -162,9 +162,9 @@ namespace PRG2_Assignment.classes
             while (count < scoops)
             {
                 // Used to output all available flavours if user keys in an unavailable flavour
-                string flavourString = flavours[0];
+                string flavourString = "";
                 foreach (string s in flavours)
-                    flavourString = flavourString + $", {s}";
+                    flavourString = flavourString + $"{CapitaliseFirstLetters(s)}, ";
 
                 Console.Write("Please enter an ice cream flavour: ");
                 string fOption = Console.ReadLine().ToLower();
