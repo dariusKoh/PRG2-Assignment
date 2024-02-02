@@ -36,21 +36,27 @@ void getCustomers(List<Customer> customerList)
     {
         string? s = sr.ReadLine();
         if (s != null) { string[] heading = s.Split(','); }
+
+        int listLength = 0;
         while ((s = sr.ReadLine()) != null)
         {
             string[] temp = s.Split(",");
             // Makes sure the format is in dd/MM/yyyy to prevent issues
             DateTime DoB = DateTime.ParseExact(temp[2], "dd/MM/yyyy", null);
-
-            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
             Customer tempCustomer = new Customer(temp[0], Convert.ToInt32(temp[1]), DoB);
+            PointCard tempCard = new PointCard(Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
 
-            // Fetches and updates tier
-            tempCard.Tier = temp[3];
-            tempCard.CheckTierUpgrade();
-            
-            tempCustomer.Rewards = tempCard;
-            customerList.Add(tempCustomer);
+            // Prevents appending the same customer data.
+            if (listLength >= customerList.Count)
+            {
+                // Fetches and updates tier
+                tempCard.Tier = temp[3];
+                tempCard.CheckTierUpgrade();
+
+                tempCustomer.Rewards = tempCard;
+                customerList.Add(tempCustomer);
+                listLength++;
+            }
         }
     }
 }
