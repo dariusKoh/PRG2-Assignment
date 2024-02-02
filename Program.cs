@@ -269,7 +269,8 @@ void CreateCustomerOrder()
         string additionalIceCream = Console.ReadLine().ToLower();
 
         if (additionalIceCream == "y") { newOrder.AddIceCream(newOrder.CreateIceCream()); }
-        else { break; }
+        else if (additionalIceCream == "n") { break; }
+        else { Console.WriteLine("Please enter either 'Y' or 'N'."); }
     }
     chosenCustomer.CurrentOrder = newOrder;
 
@@ -644,7 +645,7 @@ void displayCurrentItems(Order currentOrder)
 //Interface - Clive + Darius
 void DisplayInterface()
 {
-    Console.WriteLine("Options\n---------\n" +
+    Console.WriteLine("---------\nOptions\n---------\n" +
         "[1] List all customers\n" +
         "[2] List all current orders\n" +
         "[3] Register a new customer\n" +
@@ -763,6 +764,15 @@ void ProcessOrderAndCheckout()
         return; // Returns user back to main UI
     }
 
+    foreach (Customer j in customerList)
+    {
+        if (j.CurrentOrder == currentOrder)
+        {
+            currentCustomer = j;
+            break;
+        }
+    }
+
     foreach (IceCream i in currentOrder.IceCreamList)
     {
         Console.WriteLine($"Ice Cream {currentOrder.IceCreamList.IndexOf(i) + 1}:" +
@@ -800,23 +810,14 @@ void ProcessOrderAndCheckout()
 
         priceList.Add(i.CalculatePrice());
     }
-
-    foreach (Customer j in customerList)
-    {
-        if (j.CurrentOrder == currentOrder)
-        {
-            currentCustomer = j;
-            break;
-        }
-    }
     
     Console.WriteLine($"Membership Status: {currentCustomer.Rewards.Tier}" +
         $"\nPoints: {currentCustomer.Rewards.Points}" +
-        $"\nTotal Bill : {priceList.Sum()}");
+        $"\n---------\n" +
+        $"Total Bill : {priceList.Sum():C}" +
+        $"\n---------");
 
-    /* IceCreamList is cloned here in the event that both the punchcard and birthday is activated.
-       This event may mess up the Ice Cream numbers displayed previously. */
-    List<IceCream> tempIceCreamList = new List<IceCream>(currentOrder.IceCreamList);
+    /* freeIceCream is used to detect if a free ice cream is given to the user, so that the discounted bill is only displayed once. */
     bool freeIceCream = false;
     if (currentCustomer.Rewards.PunchCard + currentOrder.IceCreamList.Count > 10)
     {
@@ -827,56 +828,85 @@ void ProcessOrderAndCheckout()
 
     if (currentCustomer.IsBirthday())
     {
-        Console.WriteLine($"Happy Birthday! Ice Cream {tempIceCreamList.IndexOf(tempIceCreamList[priceList.IndexOf(priceList.Max())]) + 1} from your order is now free!");
+        foreach (IceCream i in currentOrder.IceCreamList)
+        {
+            if (i.CalculatePrice() == priceList.Max())
+            {
+                Console.WriteLine($"Happy Birthday! Ice Cream {currentOrder.IceCreamList.IndexOf(i) + 1} from your order is now free!");
+            }
+        }
+
+        //Console.WriteLine($"Happy Birthday! Ice Cream {currentOrder.IceCreamList.IndexOf(priceList[priceList.IndexOf(priceList.Max())]) + 1} from your order is now free!");
         priceList.RemoveAt(priceList.IndexOf(priceList.Max()));
         freeIceCream = true;
     }
 
     if (freeIceCream)
-        Console.WriteLine($"New Total Bill : {priceList.Sum()}");
+        Console.WriteLine($"---------\n" +
+            $"New Total Bill : {priceList.Sum():C}\n" +
+            $"---------");
 
     totalPrice = priceList.Sum();
     if (currentCustomer.Rewards.Tier != "Ordinary" && currentCustomer.Rewards.Points > 0 && priceList.Sum() > 0)
     {
-        Console.Write("How many points would you like to redeem? : ");
-        int pointsUsed = Convert.ToInt32(Console.ReadLine());
-
-        if (pointsUsed != 0)
+        while (true)
         {
-            // Prevent user from spending more points than possible, as a negative discount would be bad for business.
-            if (pointsUsed * 0.02 < totalPrice)
+            int pointsUsed = 0;
+            try
             {
-                currentCustomer.Rewards.RedeemPoints(pointsUsed);
-                totalPrice -= pointsUsed * 0.02;
-
-                Console.WriteLine($"{pointsUsed} points have been redeemed for a {pointsUsed * 0.02:C} discount.");
+                Console.Write("How many points would you like to redeem? : ");
+                pointsUsed = Convert.ToInt32(Console.ReadLine());
             }
-            else
+            catch (Exception e) { Console.WriteLine("Please enter an integer."); }
+            
+            if (pointsUsed != 0)
             {
-                /*  x = 0.02y
-                    x = y/50
-                    therefore, y = 50x */
-                int maxPointsUsed = Convert.ToInt32(Math.Floor(totalPrice)) * 50;
+                if (currentCustomer.Rewards.Points >= pointsUsed)
+                {
+                    // Prevent user from spending more points than possible, as a negative discount would be bad for business.
+                    if (pointsUsed * 0.02 < totalPrice)
+                    {
+                        currentCustomer.Rewards.RedeemPoints(pointsUsed);
+                        totalPrice -= pointsUsed * 0.02;
 
-                currentCustomer.Rewards.RedeemPoints(maxPointsUsed);
-                totalPrice -= maxPointsUsed * 0.02;
+                        Console.WriteLine($"{pointsUsed} points have been redeemed for a {pointsUsed * 0.02:C} discount.");
+                    }
+                    else
+                    {
+                        /*  x = 0.02y
+                            x = y/50
+                            therefore, y = 50x */
+                        int maxPointsUsed = Convert.ToInt32(Math.Floor(totalPrice)) * 50;
 
-                Console.WriteLine($"{pointsUsed} points has been reduced to {maxPointsUsed} points, for a full discount of $0.00 paid.\n" +
-                    $"This is due to {pointsUsed} being over the maximum discount of $0.00.");
+                        currentCustomer.Rewards.RedeemPoints(maxPointsUsed);
+                        totalPrice -= maxPointsUsed * 0.02;
+
+                        Console.WriteLine($"{pointsUsed} points has been reduced to {maxPointsUsed} points, for a full discount of $0.00 paid.\n" +
+                            $"This is due to {pointsUsed} being over the maximum discount of $0.00.");
+                    }
+                    break;
+                }
+                Console.WriteLine($"You do not have that many points!\nCurrent Points: {currentCustomer.Rewards.Points}");
             }
+            break;
         }
     }
 
-    Console.WriteLine($"Final Bill : {totalPrice:C}");
+    Console.WriteLine($"---------\n" +
+        $"Final Bill : {totalPrice:C}\n" +
+        $"---------");
     Console.Write("Please press any key to make payment. ");
     Console.ReadLine(); // So the press any key works
 
     for (int i = 0; i < currentOrder.IceCreamList.Count; i++)
         currentCustomer.Rewards.Punch();
 
+    int pointsBeforeEarn = currentCustomer.Rewards.Points;
     currentCustomer.Rewards.AddPoints(priceList.Sum());
     currentCustomer.Rewards.CheckTierUpgrade();
-    Console.WriteLine($"Payment Complete. " +
+
+    Console.WriteLine($"Payment Complete." +
+        $"\nPoints Earned: {currentCustomer.Rewards.Points - pointsBeforeEarn}" +
         $"\nCurrent Points: {currentCustomer.Rewards.Points}" +
         $"\nCurrent Membership Tier: {currentCustomer.Rewards.Tier}");
 

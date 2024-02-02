@@ -44,8 +44,7 @@ namespace PRG2_Assignment.classes
                 stringList[i] = new string(letters);
             }
 
-            string output = string.Join(" ", stringList);
-            return output;
+            return string.Join(" ", stringList);
         }
 
         public IceCream CreateIceCream()
@@ -129,7 +128,7 @@ namespace PRG2_Assignment.classes
                     break;
                 else if (toppings.Contains(tOption))
                 {
-                    tList.Add(new Topping(tOption));
+                    tList.Add(new Topping(CapitaliseFirstLetters(tOption)));
                     count++;
                 }
                 else
@@ -154,6 +153,7 @@ namespace PRG2_Assignment.classes
 
                 if (flavours.Contains(fOption))
                 {
+                    fOption = CapitaliseFirstLetters(fOption);
                     if (flavours.IndexOf(fOption) > 2)
                         flList.Add(new Flavour(fOption, true));    
                     else
@@ -164,68 +164,22 @@ namespace PRG2_Assignment.classes
                     Console.WriteLine("Please enter a valid flavour.");
             }
 
-            //Converting any strings to be capitalised
-            string newoption = Convert.ToString(iceCreamData[0]);
-            var optionArray = newoption.ToCharArray();
-            for (int i = 0; i<1; i++)
-            {
-                optionArray[i] = char.ToUpper(optionArray[i]);
-            }
-            newoption = new string(optionArray);
+            iceCreamData[0] = CapitaliseFirstLetters((string)iceCreamData[0]);
 
-            for (int f = 0; f < flList.Count(); f++) 
-            { 
-                Flavour fl = flList[f];
-                var flArray = fl.Type.ToCharArray();
-                for (int i = 0; i<1; i++)
-                {
-                    if (fl.Type == "sea salt")
-                    {
-                        flArray[4] = char.ToUpper(flArray[4]);
-                    }
-                    flArray[i] = char.ToUpper(flArray[i]);
-                    string newfl = new string(flArray);
-                    flList[f].Type = newfl;
-                }
-            }
+            if ((string)iceCreamData[0] == "Cup")
+            {
 
-            for (int t = 0; t < tList.Count(); t++)
-            {
-                Topping tp = tList[t];
-                var tArray = tp.Type.ToCharArray();
-                for (int i = 0; i < 1; i++)
-                {
-                    tArray[i] = char.ToUpper(tArray[i]);
-                    string newt = new string(tArray);
-                    tList[t].Type = newt;
-                }
+                IceCream newIceCream = new Cup(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[1]), flList, tList);
+                return newIceCream;
             }
-
-            if ((string)iceCreamData[0] == "cup")
+            else if ((string)iceCreamData[0] == "Cone")
             {
-                
-                IceCream newIceCream = new Cup(newoption, Convert.ToInt16(iceCreamData[1]), flList, tList);
-                return newIceCream; 
-            }
-            else if ((string)iceCreamData[0] == "cone")
-            {
-                IceCream newIceCream = new Cone(newoption, Convert.ToInt16(iceCreamData[2]), Convert.ToBoolean(iceCreamData[1]), flList, tList);
+                IceCream newIceCream = new Cone(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), Convert.ToBoolean(iceCreamData[1]), flList, tList);
                 return newIceCream;
             }
             else
             {
-                string wflavour = Convert.ToString(iceCreamData[1]);
-                var warray = wflavour.ToCharArray();
-                for (int i = 0; i<1; i++)
-                {
-                    if (wflavour == "red velvet")
-                    {
-                        warray[4] = char.ToUpper(warray[4]);
-                    }
-                    warray[i] = char.ToUpper(warray[i]);
-                }
-                wflavour = new string(warray);
-                IceCream newIceCream = new Waffle(newoption, Convert.ToInt16(iceCreamData[2]), wflavour, flList, tList);
+                IceCream newIceCream = new Waffle(Convert.ToString(iceCreamData[0]), Convert.ToInt16(iceCreamData[2]), CapitaliseFirstLetters(Convert.ToString(iceCreamData[1])), flList, tList);
                 return newIceCream;
             }
         }
